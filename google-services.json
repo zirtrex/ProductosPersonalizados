@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "157476272149",
+    "firebase_url": "https://productos-personalizados-ef0a4.firebaseio.com",
+    "project_id": "productos-personalizados-ef0a4",
+    "storage_bucket": "productos-personalizados-ef0a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157476272149:android:8236e0c6b633a9b1",
+        "android_client_info": {
+          "package_name": "net.zirtrex.productospersonalizados"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "157476272149-tjqon4u4bi96klqlqckaf5tv10ouim6t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7Aq5pA5D2cl44Cpko8IDCaHEevmtzu1E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "157476272149-tjqon4u4bi96klqlqckaf5tv10ouim6t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

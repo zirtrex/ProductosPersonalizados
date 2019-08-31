@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">CateonCook</string>
+
+    <!-- Change the following strings as required -->
+    <string name="title_fragment_login">Ingresar</string>
+    <string name="title_fragment_productos">Productos</string>
+    <string name="title_fragment_cart">Productos Seleccionados</string>
+    <string name="title_fragment_financiamiento">Financiamiento</string>
+    <string name="title_fragment_formas_de_pago">Formas de Pago</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Correo</string>
+    <string name="prompt_password">Clave</string>
+    <string name="action_sign_in_short">Ingresar</string>
+    <string name="error_invalid_email">La dirección de correo no es válida.</string>
+    <string name="error_invalid_password">La clave es muy corta</string>
+    <string name="error_incorrect_password">La contraseña es incorrecta</string>
+    <string name="error_field_required">Este campo es requerido</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Configuración</string>
+
+    <string name="cantidad">Cantidad</string>
+    <string name="add_product">Agregar Producto</string>
+    <string name="initial_quantity_value">1</string>
+    <string name="total">Total</string>
+
+    <string name="notificacion">Notificaciones</string>
+
+</resources>
