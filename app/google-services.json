@@ -1,39 +1,37 @@
 {
   "project_info": {
-    "project_number": "1015915351019",
-    "firebase_url": "https://cateoncook.firebaseio.com",
-    "project_id": "cateoncook",
-    "storage_bucket": "cateoncook.appspot.com"
+    "project_number": "157476272149",
+    "firebase_url": "https://productos-personalizados-ef0a4.firebaseio.com",
+    "project_id": "productos-personalizados-ef0a4",
+    "storage_bucket": "productos-personalizados-ef0a4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1015915351019:android:f36bf67fd4a94e40",
+        "mobilesdk_app_id": "1:157476272149:android:8236e0c6b633a9b1",
         "android_client_info": {
-          "package_name": "net.inlanet.cateoncook"
+          "package_name": "net.zirtrex.productospersonalizados"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1015915351019-u9ot76qc78n7vmch0q2fip0sp96uqdpe.apps.googleusercontent.com",
+          "client_id": "157476272149-tjqon4u4bi96klqlqckaf5tv10ouim6t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAwXUaK2BDVf4pgwnA0h2ncnvyq__xzL60"
+          "current_key": "AIzaSyD7Aq5pA5D2cl44Cpko8IDCaHEevmtzu1E"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "157476272149-tjqon4u4bi96klqlqckaf5tv10ouim6t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
