@@ -1,2 +1,1 @@
-Sistema de Cation Cook 2
-Sistema
+Aplicación para el el Curso Integrador de Software I - UTP
