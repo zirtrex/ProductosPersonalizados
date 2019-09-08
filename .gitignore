@@ -6,7 +6,8 @@
 /.idea/libraries
 .DS_Store
 /build
-/gradle
+/app/build
 /captures
 .externalNativeBuild
 google-services.json
+/app/google-services.json
