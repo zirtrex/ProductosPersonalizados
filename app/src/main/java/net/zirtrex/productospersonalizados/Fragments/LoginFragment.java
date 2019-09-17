@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -17,8 +18,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,15 +30,28 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import net.zirtrex.productospersonalizados.Activities.R;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class LoginFragment extends Fragment {
 
+    public static final String TAG ="LoginFragment";
+
     FirebaseAuth.AuthStateListener mAuthListener;
 
+    ArrayAdapter spnrRolAdapter;
+    public static List<String> lRol = new ArrayList<>();
+
     // UI references.
+    Spinner spnrRol;
     private EditText mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -57,6 +73,14 @@ public class LoginFragment extends Fragment {
 
         getActivity().setTitle(getText(R.string.title_fragment_login));
 
+        spnrRol = (Spinner) view.findViewById(R.id.spnrRol);
+
+        spnrRolAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lRol);
+        spnrRolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnrRol.setAdapter(spnrRolAdapter);
+
+        populateLRol();
+
         mEmailView = (EditText) view.findViewById(R.id.email);
 
         mPasswordView = (EditText) view.findViewById(R.id.password);
@@ -67,21 +91,32 @@ public class LoginFragment extends Fragment {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
                     InputMethodManager imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-                    attemptLogin();
+                    attemptLoginOrRegister("login");
                     return true;
                 }
                 return false;
             }
         });
 
-        Button mEmailSignInButton = (Button) view.findViewById(R.id.email_sign_in_button);
+        Button btnLogin = (Button) view.findViewById(R.id.btnLogin);
 
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        btnLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 mEmailView.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 mPasswordView.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                attemptLogin();
+                attemptLoginOrRegister("login");
+            }
+        });
+
+        Button btnRegister = (Button) view.findViewById(R.id.btnRegister);
+
+        btnRegister.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mEmailView.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                mPasswordView.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                attemptLoginOrRegister("register");
             }
         });
 
@@ -94,14 +129,15 @@ public class LoginFragment extends Fragment {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null){
-                    ProductsFragment nextFrag= new ProductsFragment();
+                    ProductsFragment productsFragment = new ProductsFragment();
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content_main, nextFrag,"findThisFragment")
+                            .replace(R.id.content_main, productsFragment,ProductsFragment.TAG)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                             .addToBackStack(null)
                             .commit();
-                    Log.w("Login" , "Usuario Logueado");
+                    Log.w(TAG , "Usuario Logueado");
                 }else {
-                    Log.w("Login" , "Sin usuario activo");
+                    Log.w(TAG , "Sin usuario activo");
                 }
             }
         };
@@ -109,7 +145,17 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-    private void attemptLogin() {
+    private void populateLRol(){
+
+        lRol.clear();
+
+        lRol.add("proveedor");
+        lRol.add("cliente");
+
+        spnrRolAdapter.notifyDataSetChanged();
+    }
+
+    private void attemptLoginOrRegister(String option) {
 
         // Reset errors.
         mEmailView.setError(null);
@@ -118,6 +164,7 @@ public class LoginFragment extends Fragment {
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String rol = spnrRol.getSelectedItem().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -153,8 +200,11 @@ public class LoginFragment extends Fragment {
             // perform the user login attempt.
             //focusView = null;
             showProgress(true);
-            doLogin(email, password);
-
+            if (option == "login") {
+                doLogin(email, password);
+            }else{
+                createAccount(email, password, rol);
+            }
         }
     }
 
@@ -168,27 +218,66 @@ public class LoginFragment extends Fragment {
         return password.length() > 4;
     }
 
-    protected void doLogin(String mEmail, String mPassword) {
+    private void createAccount(final String email, String password, final String rol) {
+        Log.d(TAG, "createAccount:" + email);
 
-        Log.w("Login", "Entrando aqui");
-
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(mEmail, mPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-
-                    Log.w("Login", "Usuario Válido");
-
-                }else{
-
-                    Log.w("Login", "Error al intentar Ingresar", task.getException());
-                    String msg = "Usuario y/o Clave son incorrectos [" + task.getException().getMessage() + "]";
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "createUserWithEmail: success");
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    String user_id = user.getUid();
+                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("users").child(rol).child(user_id).child("email");
+                    current_user_db.setValue(email);
+                    sendEmailVerification();
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "createUserWithEmail: failure", task.getException());
+                    String msg = "Registro fallido [" + task.getException().getMessage() + "]";
                     Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
-
                 }
                 showProgress(false);
-            }
-        });
+                }
+            });
+        // [END create_user_with_email]
+    }
+
+    protected void doLogin(String email, String password) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        Log.w(TAG, "Usuario Válido");
+                    }else{
+
+                        Log.w(TAG, "Error al intentar Ingresar", task.getException());
+                        String msg = "Usuario y/o Clave son incorrectos [" + task.getException().getMessage() + "]";
+                        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+
+                    }
+                    showProgress(false);
+                }
+            });
+    }
+
+    private void sendEmailVerification() {
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user.sendEmailVerification()
+            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getActivity(),"Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.e(TAG, "sendEmailVerification", task.getException());
+                    Toast.makeText(getActivity(), "Ha fallado la verificación del correo", Toast.LENGTH_SHORT).show();
+                }
+                }
+            });
     }
 
     /**
@@ -226,7 +315,6 @@ public class LoginFragment extends Fragment {
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
 
 
     @Override

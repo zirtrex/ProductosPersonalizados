@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="net.zirtrex.productospersonalizados.Activities.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/title_fragment_productos"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,7 +26,7 @@
         </activity>
         <activity
             android:name="net.zirtrex.productospersonalizados.Fragments.ProductDetailFragment"
-            android:parentActivityName="net.zirtrex.productospersonalizados.Activities.MainActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="net.zirtrex.productospersonalizados.Activities.MainActivity" />
@@ -34,18 +34,20 @@
         <activity
             android:name="net.zirtrex.productospersonalizados.Fragments.LoginFragment"
             android:label="@string/title_fragment_login"
-            android:parentActivityName="net.zirtrex.productospersonalizados.Activities.MainActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="net.zirtrex.productospersonalizados.Activities.MainActivity" />
         </activity>
-        <activity android:name="net.zirtrex.productospersonalizados.Fragments.CartFragment"
+        <activity
+            android:name="net.zirtrex.productospersonalizados.Fragments.CartFragment"
             android:label="@string/title_fragment_cart"
-            android:parentActivityName="net.zirtrex.productospersonalizados.Activities.MainActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="net.zirtrex.productospersonalizados.Activities.MainActivity" />
         </activity>
+        <activity android:name=".ProveedorActivity"></activity>
     </application>
 
 </manifest>

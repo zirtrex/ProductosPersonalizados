@@ -25,6 +25,8 @@ import java.util.List;
 
 public class ProductsFragment extends Fragment {
 
+    public static final String TAG = "ProductsFragment";
+
     private Toolbar toolbar;
     RecyclerView rvProductos;
     RecyclerAdapter recyclerAdapter;

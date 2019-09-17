@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         OnFragmentInteractionListener{
 
+    public static final String TAG ="LoginFragment";
+
     FirebaseAuth.AuthStateListener mAuthListener;
 
     TextView tvUserEmail;
@@ -68,13 +70,13 @@ public class MainActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null){
-                    Log.w("session" , "Usuario Logueado");
+                    Log.w(TAG , "Usuario Logueado");
                     tvUserEmail.setText(user.getEmail());
                     tvUserEmail.setVisibility(View.VISIBLE);
                     btnLogin.setVisibility(View.GONE);
                     btnLogout.setVisibility(View.VISIBLE);
                 }else {
-                    Log.w("session" , "Sin usuario activo");
+                    Log.w(TAG , "Sin usuario activo");
                     btnLogin.setVisibility(View.VISIBLE);
                 }
             }
@@ -102,7 +104,9 @@ public class MainActivity extends AppCompatActivity
                 if (drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.closeDrawer(GravityCompat.START);
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new LoginFragment()).commit();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.content_main, new LoginFragment(), LoginFragment.TAG)
+                        .commit();
             }
         });
 
@@ -121,10 +125,11 @@ public class MainActivity extends AppCompatActivity
 
         if(Utils.validateScreen){
 
-            Fragment miFragment = new ProductsFragment();
-            getSupportFragmentManager().beginTransaction().
-                    replace(R.id.content_main, miFragment)
-                    .addToBackStack(null).commit();
+            Fragment productsFragment = new ProductsFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_main, productsFragment, ProductsFragment.TAG)
+                    .addToBackStack(null)
+                    .commit();
 
             Utils.validateScreen = false;
         }
@@ -239,10 +244,11 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-
         if (fragmentSeleccionado){
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_main, miFragment)
-                    .addToBackStack(null).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_main, miFragment, miFragment.getTag())
+                    .addToBackStack(null)
+                    .commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

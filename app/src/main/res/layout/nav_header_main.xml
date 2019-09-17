@@ -16,13 +16,13 @@
 
     <ImageView
         android:id="@+id/imageView"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:elevation="0dp"
-        android:layout_margin="10sp"
-        android:layout_gravity="top"
-        android:contentDescription="Imagen del Producto"
         android:layout_width="60dp"
-        android:layout_height="60dp" />
+        android:layout_height="60dp"
+        android:layout_gravity="top"
+        android:layout_margin="10sp"
+        android:contentDescription="Imagen del Producto"
+        android:elevation="0dp"
+        app:srcCompat="@android:drawable/ic_menu_send" />
 
     <LinearLayout
         android:orientation="vertical"

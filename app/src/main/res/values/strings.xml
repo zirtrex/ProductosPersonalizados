@@ -12,6 +12,7 @@
     <string name="prompt_email">Correo</string>
     <string name="prompt_password">Clave</string>
     <string name="action_sign_in_short">Ingresar</string>
+    <string name="action_register_in_short">Registrarse</string>
     <string name="error_invalid_email">La dirección de correo no es válida.</string>
     <string name="error_invalid_password">La clave es muy corta</string>
     <string name="error_incorrect_password">La contraseña es incorrecta</string>
