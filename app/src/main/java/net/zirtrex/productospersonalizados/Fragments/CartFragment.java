@@ -221,7 +221,7 @@ public class CartFragment extends Fragment implements View.OnClickListener{
                 Fragment fFinanciamiento = new FinanciamientoFragment();
                 fFinanciamiento.setArguments(args);
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_main, fFinanciamiento,"Fragment Financiamiento")
+                        .replace(R.id.content_cliente, fFinanciamiento,"Fragment Financiamiento")
                         .addToBackStack(null)
                         .commit();
 
@@ -230,7 +230,7 @@ public class CartFragment extends Fragment implements View.OnClickListener{
 
                 Fragment fFormasPago = new FormasPagoFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_main, fFormasPago,"Fragment Formas de Pago")
+                        .replace(R.id.content_cliente, fFormasPago,"Fragment Formas de Pago")
                         .addToBackStack(null)
                         .commit();
 

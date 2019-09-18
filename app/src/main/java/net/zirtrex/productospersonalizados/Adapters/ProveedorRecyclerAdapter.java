@@ -13,30 +13,31 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.List;
-
-import net.zirtrex.productospersonalizados.Fragments.ProductDetailFragment;
 import net.zirtrex.productospersonalizados.Activities.R;
+import net.zirtrex.productospersonalizados.Fragments.ProductDetailFragment;
 import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
+import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.Productos;
 
+import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
-    private final OnFragmentInteractionListener mListener;
+public class ProveedorRecyclerAdapter extends RecyclerView.Adapter<ProveedorRecyclerAdapter.ViewHolder> {
+
+    private final OnProveedorFragmentInteractionListener mListener;
 
     private List<Productos> lProductos;
     private Context context;
 
 
-    public RecyclerAdapter(Context context, List<Productos> productos, OnFragmentInteractionListener listener){
+    public ProveedorRecyclerAdapter(Context context, List<Productos> productos, OnProveedorFragmentInteractionListener listener){
         this.lProductos = productos;
         mListener = listener;
         this.context = context;
     }
 
     @Override
-    public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ProveedorRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
@@ -45,7 +46,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(ProveedorRecyclerAdapter.ViewHolder viewHolder, int position) {
 
         Productos producto = lProductos.get(position);
 

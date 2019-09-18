@@ -18,6 +18,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -36,8 +37,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-crash:11.4.2'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.1'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
-    //implementation 'com.github.bumptech.glide:glide:3.7.0'
-    //Pdf
 }
 
 apply plugin: 'com.google.gms.google-services'

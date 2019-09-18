@@ -10,10 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Fragments.LoginFragment;
+import net.zirtrex.productospersonalizados.Models.Usuarios;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -35,20 +39,35 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null){
                     String user_id = user.getUid();
-                    DatabaseReference current_user_db_cliente = FirebaseDatabase.getInstance().getReference().child("users").child("cliente").child(user_id);
-                    DatabaseReference current_user_db_proveedor = FirebaseDatabase.getInstance().getReference().child("users").child("proveedor").child(user_id);
+                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
 
-                    if(current_user_db_cliente != null){
-                        Log.w(TAG , "Cliente Logueado");
-                        Intent intent = new Intent(getApplicationContext(), ClienteActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }else if(current_user_db_proveedor != null){
-                        Log.w(TAG , "Proveedor Logueado");
-                        Intent intent = new Intent(getApplicationContext(), ProveedorActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
+                    current_user_db.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Usuarios usuario = dataSnapshot.getValue(Usuarios.class);
+
+                            if(usuario != null){
+                                if(usuario.getRol().equals("cliente")){
+                                    Log.w(TAG , "Cliente Logueado");
+                                    Intent intent = new Intent(getApplicationContext(), ClienteActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                }else if(usuario.getRol().equals("proveedor")){
+                                    Log.w(TAG , "Proveedor Logueado");
+                                    Intent intent = new Intent(getApplicationContext(), ProveedorActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+
                 }else {
                     Log.w(TAG , "Sin usuario activo");
                 }

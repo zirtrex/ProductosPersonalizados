@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="net.zirtrex.productospersonalizados.Activities.ClienteActivity"
     android:layout_width="match_parent"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
@@ -10,7 +11,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    tools:context="net.zirtrex.productospersonalizados.Activities.ClienteActivity"
     android:layout_height="180dp"
     android:gravity="bottom">
 

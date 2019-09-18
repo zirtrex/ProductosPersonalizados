@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_productos"
+            android:icon="@drawable/checklist"
+            android:title="Productos" />
+        <item
+            android:id="@+id/nav_financiamientos"
+            android:icon="@drawable/money"
+            android:title="Financiamientos" />
+        <item
+            android:id="@+id/nav_formas_de_pago"
+            android:icon="@drawable/credit_card"
+            android:title="Formas de Pago" />
+        <item
+            android:id="@+id/nav_premios"
+            android:icon="@drawable/rocket"
+            android:title="Premios" />
+    </group>
+
+</menu>

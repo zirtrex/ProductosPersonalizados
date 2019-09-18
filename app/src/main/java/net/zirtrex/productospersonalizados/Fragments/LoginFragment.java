@@ -6,9 +6,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,11 +31,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import net.zirtrex.productospersonalizados.Activities.ClienteActivity;
 import net.zirtrex.productospersonalizados.Activities.ProveedorActivity;
 import net.zirtrex.productospersonalizados.Activities.R;
+import net.zirtrex.productospersonalizados.Models.Usuarios;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -125,28 +130,39 @@ public class LoginFragment extends Fragment {
         mLoginFormView = view.findViewById(R.id.login_form);
         mProgressView = view.findViewById(R.id.login_progress);
 
+        final Fragment thisFragment = this;
         mAuthListener = new FirebaseAuth.AuthStateListener(){
-
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                String user_id = user.getUid();
-                DatabaseReference current_user_db_proveedor = FirebaseDatabase.getInstance().getReference().child("users").child("proveedor").child(user_id);
-                DatabaseReference current_user_db_cliente = FirebaseDatabase.getInstance().getReference().child("users").child("cliente").child(user_id);
+                if(user != null){
+                    String user_id = user.getUid();
+                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
 
-                if(current_user_db_cliente != null){
-                    ProductsFragment productsFragment = new ProductsFragment();
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content_main, productsFragment,ProductsFragment.TAG)
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .addToBackStack(null)
-                            .commit();
-                    Log.w(TAG , "Cliente");
-                }else if(current_user_db_proveedor != null){
-                    Log.w(TAG , "Proveedor");
-                    Intent intent = new Intent(getActivity(), ProveedorActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                    current_user_db.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Usuarios usuario = dataSnapshot.getValue(Usuarios.class);
+
+                            if(usuario != null){
+                                if(usuario.getRol() == "cliente"){
+                                    Log.w(TAG , "Cliente Logueado");
+                                }else if(usuario.getRol() == "proveedor"){
+                                    Log.w(TAG , "Proveedor Logueado");
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    getActivity().getSupportFragmentManager().beginTransaction().remove(thisFragment).commit();
+
+                }else {
+                    Log.w(TAG , "Sin usuario activo");
                 }
             }
         };
@@ -156,10 +172,8 @@ public class LoginFragment extends Fragment {
 
     private void populateLRol(){
         lRol.clear();
-
         lRol.add("proveedor");
         lRol.add("cliente");
-
         spnrRolAdapter.notifyDataSetChanged();
     }
 
@@ -238,7 +252,7 @@ public class LoginFragment extends Fragment {
                     Log.d(TAG, "cuenta creada con email: success");
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     String user_id = user.getUid();
-                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("users").child(rol).child(user_id);
+                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
                     current_user_db.child("email").setValue(email);
                     current_user_db.child("rol").setValue(rol);
                     sendEmailVerification();
@@ -254,12 +268,15 @@ public class LoginFragment extends Fragment {
     }
 
     protected void doLogin(String email, String password) {
+        final Fragment thisFragment = this;
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         Log.w(TAG, "Usuario Válido");
+
+                        getActivity().getSupportFragmentManager().beginTransaction().remove(thisFragment).commit();
                     }else{
 
                         Log.w(TAG, "Error al intentar Ingresar", task.getException());

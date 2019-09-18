@@ -42,7 +42,7 @@ import java.util.List;
 
 public class ClienteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        OnFragmentInteractionListener{
+        OnFragmentInteractionListener {
 
     public static final String TAG ="ClienteActivity";
 
@@ -66,36 +66,6 @@ public class ClienteActivity extends AppCompatActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mAuthListener = new FirebaseAuth.AuthStateListener(){
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null){
-                    String user_id = user.getUid();
-                    DatabaseReference current_user_db_proveedor = FirebaseDatabase.getInstance().getReference().child("users").child("proveedor").child(user_id);
-                    DatabaseReference current_user_db_cliente = FirebaseDatabase.getInstance().getReference().child("users").child("cliente").child(user_id);
-
-                    if(current_user_db_cliente != null){
-                        Log.w(TAG , "Usuario Logueado");
-                        tvUserEmail.setText(user.getEmail());
-                        tvUserEmail.setVisibility(View.VISIBLE);
-                        btnLogin.setVisibility(View.GONE);
-                        btnLogout.setVisibility(View.VISIBLE);
-                    }else if(current_user_db_proveedor != null){
-                        Log.w(TAG , "Proveedor");
-                        Intent intent = new Intent(getApplicationContext(), ProveedorActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
-                }else {
-                    Log.w(TAG , "Sin usuario activo");
-                    btnLogin.setVisibility(View.VISIBLE);
-                }
-
-
-            }
-        };
-
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -112,6 +82,8 @@ public class ClienteActivity extends AppCompatActivity
         btnLogin = (Button) header.findViewById(R.id.btnLogin);
         btnLogout = (Button) header.findViewById(R.id.btnLogout);
 
+        getFirebaseAuthSession();
+
         btnLogin.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -119,7 +91,7 @@ public class ClienteActivity extends AppCompatActivity
                     drawer.closeDrawer(GravityCompat.START);
                 }
                 getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_main, new LoginFragment(), LoginFragment.TAG)
+                    .replace(R.id.content_cliente, new LoginFragment(), LoginFragment.TAG)
                     .commit();
             }
         });
@@ -141,7 +113,7 @@ public class ClienteActivity extends AppCompatActivity
 
             Fragment productsFragment = new ProductsFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_main, productsFragment, ProductsFragment.TAG)
+                    .replace(R.id.content_cliente, productsFragment, ProductsFragment.TAG)
                     .addToBackStack(null)
                     .commit();
 
@@ -203,7 +175,7 @@ public class ClienteActivity extends AppCompatActivity
 
                 Fragment fCart = new CartFragment();
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_main, fCart,"Fragment Cart")
+                        .replace(R.id.content_cliente, fCart,"Fragment Cart")
                         .addToBackStack(null)
                         .commit();
 
@@ -220,7 +192,7 @@ public class ClienteActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         Fragment miFragment = null;
@@ -260,7 +232,7 @@ public class ClienteActivity extends AppCompatActivity
 
         if (fragmentSeleccionado){
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_main, miFragment, miFragment.getTag())
+                    .replace(R.id.content_cliente, miFragment, miFragment.getTag())
                     .addToBackStack(null)
                     .commit();
         }
@@ -268,6 +240,36 @@ public class ClienteActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void getFirebaseAuthSession(){
+        mAuthListener = new FirebaseAuth.AuthStateListener(){
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user != null){
+                    String user_id = user.getUid();
+                    DatabaseReference current_user_db_proveedor = FirebaseDatabase.getInstance().getReference().child("users").child("proveedor").child(user_id);
+                    DatabaseReference current_user_db_cliente = FirebaseDatabase.getInstance().getReference().child("users").child("cliente").child(user_id);
+
+                    if(current_user_db_cliente != null){
+                        Log.w(TAG , "Usuario Logueado");
+                        tvUserEmail.setText(user.getEmail());
+                        tvUserEmail.setVisibility(View.VISIBLE);
+                        btnLogin.setVisibility(View.GONE);
+                        btnLogout.setVisibility(View.VISIBLE);
+                    }else if(current_user_db_proveedor != null){
+                        Log.w(TAG , "Proveedor");
+                        Intent intent = new Intent(getApplicationContext(), ProveedorActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                }else {
+                    Log.w(TAG , "Sin usuario activo");
+                    btnLogin.setVisibility(View.VISIBLE);
+                }
+            }
+        };
     }
 
     private void getCart() {
