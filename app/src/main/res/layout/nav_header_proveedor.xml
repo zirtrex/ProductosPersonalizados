@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    tools:context="net.zirtrex.productospersonalizados.Activities.ClienteActivity"
+    android:layout_height="180dp"
+    android:gravity="bottom">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="top"
+        android:layout_margin="10sp"
+        android:contentDescription="Imagen del Producto"
+        android:elevation="0dp"
+        app:srcCompat="@android:drawable/ic_menu_send" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvUserEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="correo"
+            android:visibility="invisible"
+            android:textSize="16sp"
+            android:textColor="@android:color/background_light" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:text="Ingresar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textColor="@color/cardview_light_background"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textAllCaps="false"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:textSize="12sp"
+            android:textAlignment="inherit"
+            android:cursorVisible="true"
+            android:contextClickable="true" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:text="Cerrar Sesión"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textColor="@color/cardview_light_background"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:textSize="12sp"
+            android:textAllCaps="false"
+            android:cursorVisible="true"
+            android:contextClickable="true" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Build;
@@ -33,6 +34,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import net.zirtrex.productospersonalizados.Activities.ProveedorActivity;
 import net.zirtrex.productospersonalizados.Activities.R;
 
 import java.util.ArrayList;
@@ -128,16 +130,23 @@ public class LoginFragment extends Fragment {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null){
+                String user_id = user.getUid();
+                DatabaseReference current_user_db_proveedor = FirebaseDatabase.getInstance().getReference().child("users").child("proveedor").child(user_id);
+                DatabaseReference current_user_db_cliente = FirebaseDatabase.getInstance().getReference().child("users").child("cliente").child(user_id);
+
+                if(current_user_db_cliente != null){
                     ProductsFragment productsFragment = new ProductsFragment();
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.content_main, productsFragment,ProductsFragment.TAG)
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                             .addToBackStack(null)
                             .commit();
-                    Log.w(TAG , "Usuario Logueado");
-                }else {
-                    Log.w(TAG , "Sin usuario activo");
+                    Log.w(TAG , "Cliente");
+                }else if(current_user_db_proveedor != null){
+                    Log.w(TAG , "Proveedor");
+                    Intent intent = new Intent(getActivity(), ProveedorActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 }
             }
         };
@@ -146,7 +155,6 @@ public class LoginFragment extends Fragment {
     }
 
     private void populateLRol(){
-
         lRol.clear();
 
         lRol.add("proveedor");
@@ -219,7 +227,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void createAccount(final String email, String password, final String rol) {
-        Log.d(TAG, "createAccount:" + email);
+        Log.d(TAG, "Creando cuenta: " + email);
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -227,22 +235,22 @@ public class LoginFragment extends Fragment {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail: success");
+                    Log.d(TAG, "cuenta creada con email: success");
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     String user_id = user.getUid();
-                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("users").child(rol).child(user_id).child("email");
-                    current_user_db.setValue(email);
+                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("users").child(rol).child(user_id);
+                    current_user_db.child("email").setValue(email);
+                    current_user_db.child("rol").setValue(rol);
                     sendEmailVerification();
                 } else {
                     // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail: failure", task.getException());
+                    Log.w(TAG, "cuenta creada con email: failure", task.getException());
                     String msg = "Registro fallido [" + task.getException().getMessage() + "]";
                     Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
                 }
                 showProgress(false);
                 }
             });
-        // [END create_user_with_email]
     }
 
     protected void doLogin(String email, String password) {

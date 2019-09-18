@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    tools:context="net.zirtrex.productospersonalizados.Activities.MainActivity"
+    tools:context="net.zirtrex.productospersonalizados.Activities.ClienteActivity"
     android:layout_height="180dp"
     android:gravity="bottom">
 

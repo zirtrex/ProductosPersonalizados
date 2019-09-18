@@ -10,8 +10,8 @@
     android:paddingRight="@dimen/fragment_horizontal_spacing"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="net.zirtrex.productospersonalizados.Activities.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:context="net.zirtrex.productospersonalizados.Activities.ClienteActivity"
+    tools:showIn="@layout/app_bar_cliente">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -19,6 +19,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-
     </FrameLayout>
+
 </RelativeLayout>
