@@ -4,6 +4,8 @@ package net.zirtrex.productospersonalizados.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,14 +30,19 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Activities.R;
+import net.zirtrex.productospersonalizados.Adapters.ProveedorProductoMateriaPrimaRecyclerAdapter;
+import net.zirtrex.productospersonalizados.Adapters.RecyclerAdapter;
 import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.EfectivoTarjetaContent;
+import net.zirtrex.productospersonalizados.Models.MateriaPrima;
+import net.zirtrex.productospersonalizados.Models.MateriaPrimaPojo;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +52,6 @@ public class ProveedorAgregarProductoFragment extends Fragment {
     public static final String TAG = "ProveedorAgregarProductoFragment";
 
     private OnProveedorFragmentInteractionListener mListener;
-
 
     ArrayAdapter spnrTarjetaAdapter, spnrCuotasAdapter;
 
@@ -57,8 +63,12 @@ public class ProveedorAgregarProductoFragment extends Fragment {
     RadioGroup rgTipoPrenda;
     RadioButton radioButton;
 
+    RecyclerView rvProductoMateriaPrima;
+    ProveedorProductoMateriaPrimaRecyclerAdapter proveedorProductoMateriaPrimaRA;
+    static ArrayList<MateriaPrimaPojo> lProductoMateriaPrima;
+
     Spinner spnrTarjetas, spnrCuotas;
-    Button btnGenerarPago;
+    Button btnAgregarMateriaPrima;
     EditText tvEfectivo;
     TextView tvSeleccionTipoPrenda, tvConsumos, tvSubTotalConsumos, tvIVA, tvTotalConsumos,
             tvInteresFinanciamientoDiferido, tvTotal,
@@ -80,11 +90,8 @@ public class ProveedorAgregarProductoFragment extends Fragment {
         rgTipoPrenda = (RadioGroup) view.findViewById(R.id.rgTipoPrenda);
         tvSeleccionTipoPrenda = (TextView) view.findViewById(R.id.tvSeleccionTipoPrenda);
 
-        rgTipoPrenda.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        rgTipoPrenda.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // checkedId is the RadioButton selected
-
                 switch(checkedId) {
                     case R.id.rbPolos:
                         tvSeleccionTipoPrenda.setText("Has elegido: Polos" );
@@ -92,13 +99,20 @@ public class ProveedorAgregarProductoFragment extends Fragment {
                     case R.id.rbPantalones:
                         tvSeleccionTipoPrenda.setText("Has elegido: Pantalones" );
                         break;
-
                     case R.id.rbZapatos:
                         tvSeleccionTipoPrenda.setText("Has elegido: Zapatos" );
                         break;
                 }
             }
         });
+
+        rvProductoMateriaPrima = (RecyclerView) view.findViewById(R.id.rvProductoMateriaPrima);
+
+        lProductoMateriaPrima = new ArrayList<>();
+
+        proveedorProductoMateriaPrimaRA = new ProveedorProductoMateriaPrimaRecyclerAdapter(getContext(), lProductoMateriaPrima, mListener);
+        rvProductoMateriaPrima.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvProductoMateriaPrima.setAdapter(proveedorProductoMateriaPrimaRA);
 
         /*spnrTarjetas = (Spinner) view.findViewById(R.id.spnrTarjetas);
         spnrCuotas = (Spinner) view.findViewById(R.id.spnrCuotas);
@@ -123,13 +137,22 @@ public class ProveedorAgregarProductoFragment extends Fragment {
         tvTotal = (TextView) view.findViewById(R.id.tvTotal);
         tvFactor = (TextView) view.findViewById(R.id.tvFactor);
         tvResumenCuotas = (TextView) view.findViewById(R.id.tvResumenCuotas);
-        tvInteresMensual = (TextView) view.findViewById(R.id.tvInteresMensual);
+        tvInteresMensual = (TextView) view.findViewById(R.id.tvInteresMensual);*/
 
-        btnGenerarPago.setOnClickListener(new View.OnClickListener() {
+        btnAgregarMateriaPrima = (Button) view.findViewById(R.id.btnAgregarMateriaPrima);
+
+        btnAgregarMateriaPrima.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-            if(spnrTarjetas.getSelectedItem() != null && spnrCuotas.getSelectedItem() != null){
+                MateriaPrimaPojo materiaPrimaItem = new MateriaPrimaPojo();
+                materiaPrimaItem.setNombreMateriaPrima("Nombre Materia Prima");
+                materiaPrimaItem.setValorMateriaPrima(0);
+                lProductoMateriaPrima.add(materiaPrimaItem);
+                proveedorProductoMateriaPrimaRA.notifyDataSetChanged();
+            }
+
+            /*if(spnrTarjetas.getSelectedItem() != null && spnrCuotas.getSelectedItem() != null){
 
                 tarjetaSeleccionada = spnrTarjetas.getSelectedItem().toString();
                 nroCuotasSeleccionado = Integer.parseInt(spnrCuotas.getSelectedItem().toString());
@@ -160,8 +183,8 @@ public class ProveedorAgregarProductoFragment extends Fragment {
                 Toast.makeText(getActivity(),"Seleccione Tarjeta y Nro de Cuotas.", Toast.LENGTH_LONG).show();
             }
 
-            }
-        });*/
+            }*/
+        });
 
         return view;
     }

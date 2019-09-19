@@ -16,7 +16,7 @@
     <string name="action_sign_in_short">Ingresar</string>
     <string name="action_register_in_short">Registrarse</string>
     <string name="error_invalid_email">La dirección de correo no es válida.</string>
-    <string name="error_invalid_password">La clave es muy corta</string>
+    <string name="error_invalid_password">La nombreMateriaPrima es muy corta</string>
     <string name="error_field_required">Este campo es requerido</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

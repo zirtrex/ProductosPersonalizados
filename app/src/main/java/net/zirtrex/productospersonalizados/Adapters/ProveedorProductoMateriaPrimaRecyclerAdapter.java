@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,22 +16,25 @@ import com.bumptech.glide.Glide;
 
 import net.zirtrex.productospersonalizados.Activities.R;
 import net.zirtrex.productospersonalizados.Fragments.ProductDetailFragment;
-import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
+import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
+import net.zirtrex.productospersonalizados.Models.MateriaPrima;
+import net.zirtrex.productospersonalizados.Models.MateriaPrimaPojo;
 import net.zirtrex.productospersonalizados.Models.Productos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class ProveedorProductoMateriaPrimaRecyclerAdapter extends RecyclerView.Adapter<ProveedorProductoMateriaPrimaRecyclerAdapter.ViewHolder> {
 
-    private final OnFragmentInteractionListener mListener;
+    private final OnProveedorFragmentInteractionListener mListener;
 
-    private List<Productos> lProductos;
+    private static ArrayList<MateriaPrimaPojo> lProductoMateriaPrima;
     private Context context;
 
 
-    public ProveedorProductoMateriaPrimaRecyclerAdapter(Context context, List<Productos> productos, OnFragmentInteractionListener listener){
-        this.lProductos = productos;
+    public ProveedorProductoMateriaPrimaRecyclerAdapter(Context context, ArrayList<MateriaPrimaPojo> materiasPrimas, OnProveedorFragmentInteractionListener listener){
+        this.lProductoMateriaPrima = materiasPrimas;
         mListener = listener;
         this.context = context;
     }
@@ -38,7 +42,7 @@ public class ProveedorProductoMateriaPrimaRecyclerAdapter extends RecyclerView.A
     @Override
     public ProveedorProductoMateriaPrimaRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.proveedor_card_view_producto_materia_prima, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
 
@@ -47,23 +51,10 @@ public class ProveedorProductoMateriaPrimaRecyclerAdapter extends RecyclerView.A
     @Override
     public void onBindViewHolder(ProveedorProductoMateriaPrimaRecyclerAdapter.ViewHolder viewHolder, int position) {
 
-        Productos producto = lProductos.get(position);
+        MateriaPrimaPojo materiaPrima = lProductoMateriaPrima.get(position);
 
-        viewHolder.tvProductTitle.setText(producto.getNombreProducto());
-
-        if(producto.getPrecio() != null){
-            viewHolder.tvPrecio.setText("Precio: $" + producto.getPrecio().toString());
-        }else {
-            viewHolder.tvPrecio.setText("");
-        }
-
-        String imgUrl = producto.getImgUrl();
-
-        Glide.with(context.getApplicationContext())
-                .load(imgUrl)
-                .centerCrop()
-                .placeholder(R.drawable.load)
-                .into(viewHolder.ivProductImage);
+        viewHolder.txtNombreMateriaPrima.setText(materiaPrima.getNombreMateriaPrima());
+        viewHolder.txtValorMateriaPrima.setText(String.valueOf(materiaPrima.getValorMateriaPrima()));
 
     }
 
@@ -72,33 +63,31 @@ public class ProveedorProductoMateriaPrimaRecyclerAdapter extends RecyclerView.A
         return i;
     }
 
-    public Productos getItem(int position) {
+    public MateriaPrimaPojo getItem(int position) {
         if (position < 0 || position >= getItemCount()) {
             throw new IllegalArgumentException("Item position is out of adapter's range");
         }
 
-        return lProductos.get(position);
+        return lProductoMateriaPrima.get(position);
 
     }
 
     @Override
     public int getItemCount() {
-        return lProductos.size();
+        return lProductoMateriaPrima.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public int currentItem;
-        public ImageView ivProductImage;
-        public TextView tvProductTitle, tvPrecio;
+        public EditText txtNombreMateriaPrima, txtValorMateriaPrima;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ivProductImage = (ImageView) itemView.findViewById(R.id.ivProductImage);
-            tvProductTitle = (TextView) itemView.findViewById(R.id.tvProductTitle);
-            tvPrecio = (TextView) itemView.findViewById(R.id.tvPrecio);
+            txtNombreMateriaPrima = (EditText) itemView.findViewById(R.id.txtNombreMateriaPrima);
+            txtValorMateriaPrima = (EditText) itemView.findViewById(R.id.txtValorMateriaPrima);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            /*itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -120,14 +109,14 @@ public class ProveedorProductoMateriaPrimaRecyclerAdapter extends RecyclerView.A
                                 .addToBackStack(null)
                                 .commit();
 
-                        /*Snackbar.make( v, "Click detected on item " + position,
+                        Snackbar.make( v, "Click detected on item " + position,
                                 Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();*/
+                                .setAction("Action", null).show();
 
                     }
 
                 }
-            });
+            });*/
         }
     }
 }

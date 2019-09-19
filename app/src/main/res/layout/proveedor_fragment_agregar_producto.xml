@@ -90,11 +90,19 @@
                 android:textStyle="normal|bold"/>
 
             <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvProductoMateriaPrima"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/rvProductos"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+            <Button
+                android:id="@+id/btnAgregarMateriaPrima"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agregar Materia Prima"
+                android:layout_gravity="center" />
+
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -112,12 +120,7 @@
                     android:textAlignment="textEnd"
                     android:layout_gravity="end"/>
 
-                <Button
-                    android:text="Generar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btnGenerarPago"
-                    android:layout_gravity="end" />
+
 
             </LinearLayout>
 
