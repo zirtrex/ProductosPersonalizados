@@ -41,6 +41,7 @@
                 android:id="@+id/tvProductTitle"
                 android:layout_alignParentTop="true"
                 android:textSize="22dp"
+                android:text="Nombre producto"
                 android:layout_marginBottom="@dimen/activity_vertical_margin" />
 
             <TextView
@@ -49,6 +50,7 @@
                 android:id="@+id/tvPrecio"
                 android:layout_alignParentTop="true"
                 android:textSize="18dp"
+                android:text="Precio"
                 android:layout_gravity="center_vertical" />
 
         </LinearLayout>

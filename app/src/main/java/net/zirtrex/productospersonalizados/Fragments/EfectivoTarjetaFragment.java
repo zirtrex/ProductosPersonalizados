@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Activities.R;
 import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
+import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.EfectivoTarjetaContent;
 
 import java.util.ArrayList;

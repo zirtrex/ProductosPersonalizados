@@ -20,4 +20,9 @@
         <item name="textColor">@color/secondary_text</item>-->
     </style>
 
+    <style name="MyRadioButtonStyle" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/custom_button_radio_polo</item>
+        <item name="android:buttonGravity">bottom</item>
+    </style>
+
 </resources>

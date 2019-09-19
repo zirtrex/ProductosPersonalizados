@@ -77,8 +77,8 @@ public class FormasPagoFragment extends Fragment {
 
         FormasPagoAdapter fpAdapter = new FormasPagoAdapter(getFragmentManager());
 
-        fpAdapter.addFragments(new EfectivoTarjetaFragment(), "Efectivo y/o Tarjeta");
-        fpAdapter.addFragments(new ChequeFragment(), "Pago en Cheque");
+        fpAdapter.addFragments(new ProveedorAgregarProductoFragment(), "Efectivo y/o Tarjeta");
+        fpAdapter.addFragments(new ProveedorPrincipalFragment(), "Pago en Cheque");
 
         viewPager.setAdapter(fpAdapter);
 

@@ -1,6 +1,5 @@
 package net.zirtrex.productospersonalizados.Activities;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -28,8 +27,8 @@ import net.zirtrex.productospersonalizados.Fragments.FinanciamientoFragment;
 import net.zirtrex.productospersonalizados.Fragments.FormasPagoFragment;
 import net.zirtrex.productospersonalizados.Fragments.LoginFragment;
 import net.zirtrex.productospersonalizados.Fragments.ProductsFragment;
+import net.zirtrex.productospersonalizados.Fragments.ProveedorPrincipalFragment;
 import net.zirtrex.productospersonalizados.Fragments.ProveedorProductsFragment;
-import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.Usuarios;
 import net.zirtrex.productospersonalizados.Util.Utils;
@@ -44,6 +43,12 @@ public class ProveedorActivity extends AppCompatActivity
 
     TextView tvUserEmail;
     Button btnLogin, btnLogout;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +85,7 @@ public class ProveedorActivity extends AppCompatActivity
                     drawer.closeDrawer(GravityCompat.START);
                 }
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_proveedor, new LoginFragment(), LoginFragment.TAG)
+                        .add(R.id.content_proveedor, new LoginFragment(), LoginFragment.TAG)
                         .commit();
             }
         });
@@ -99,9 +104,9 @@ public class ProveedorActivity extends AppCompatActivity
         });
 
         if(Utils.validateScreen){
-            Fragment proveedorProductsFragment = new ProveedorProductsFragment();
+            Fragment proveedorPrincipalFragment = new ProveedorPrincipalFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_proveedor, proveedorProductsFragment, ProductsFragment.TAG)
+                    .replace(R.id.content_proveedor, proveedorPrincipalFragment, ProveedorPrincipalFragment.TAG)
                     .addToBackStack(null)
                     .commit();
 
@@ -132,7 +137,7 @@ public class ProveedorActivity extends AppCompatActivity
             fragmentSeleccionado = true;
 
         }else{
-            miFragment = new LoginFragment();
+            miFragment = new ProveedorProductsFragment();
             fragmentSeleccionado = true;
         }
 
@@ -146,20 +151,6 @@ public class ProveedorActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(mAuthListener != null){
-            FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
-        }
     }
 
     private void getFirebaseAuthSession(){
@@ -202,4 +193,13 @@ public class ProveedorActivity extends AppCompatActivity
             }
         };
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(mAuthListener != null){
+            FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
+        }
+    }
+
 }

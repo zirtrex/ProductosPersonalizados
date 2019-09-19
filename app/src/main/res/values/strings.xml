@@ -7,6 +7,8 @@
     <string name="title_fragment_cart">Productos Seleccionados</string>
     <string name="title_fragment_financiamiento">Financiamiento</string>
     <string name="title_fragment_formas_de_pago">Formas de Pago</string>
+    <string name="title_proveedor_fragment_principal">Proveedor</string>
+    <string name="title_proveedor_fragment_agregar_producto">Nuevo Prenda</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Correo</string>
@@ -15,7 +17,6 @@
     <string name="action_register_in_short">Registrarse</string>
     <string name="error_invalid_email">La dirección de correo no es válida.</string>
     <string name="error_invalid_password">La clave es muy corta</string>
-    <string name="error_incorrect_password">La contraseña es incorrecta</string>
     <string name="error_field_required">Este campo es requerido</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

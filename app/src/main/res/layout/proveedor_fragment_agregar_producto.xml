@@ -1,0 +1,316 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="net.zirtrex.productospersonalizados.Fragments.ProveedorAgregarProductoFragment"
+    android:background="@color/cardview_light_background">
+
+    <ScrollView
+        android:id="@+id/agregar_producto_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:text="Elige el tipo de prenda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textAlignment="center"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <RadioGroup
+                    android:id="@+id/rgTipoPrenda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbPolos"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/custom_button_radio_polo"/>
+
+                    <RadioButton
+                        android:id="@+id/rbPantalones"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/custom_button_radio_pantalon"/>
+
+                    <RadioButton
+                        android:id="@+id/rbZapatos"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/custom_button_radio_zapato"/>
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvSeleccionTipoPrenda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Has elegido: "
+                android:layout_weight="1"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:textAlignment="center" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spnrTarjetas"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spnrCuotas"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Materia Prima:"
+                android:layout_gravity="center_vertical"
+                android:textSize="18sp"
+                android:textStyle="normal|bold"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/rvProductos"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:hint="0.00"
+                    android:ems="5"
+                    android:id="@+id/tvEfectivo"
+                    android:textAlignment="textEnd"
+                    android:layout_gravity="end"/>
+
+                <Button
+                    android:text="Generar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnGenerarPago"
+                    android:layout_gravity="end" />
+
+            </LinearLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:columnCount="3"
+                android:rowCount="2"
+                android:useDefaultMargins="true">
+
+                <TextView
+                    android:text="Consumos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_rowSpan="2"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:text="Tarifa 12%"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:text="US$"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvConsumos"
+                    android:layout_rowSpan="2"
+                    android:layout_gravity="right|center_vertical" />
+
+                <TextView
+                    android:text="Tarifa 0%"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </GridLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:columnCount="3"
+                android:rowCount="2"
+                android:useDefaultMargins="true">
+
+                <TextView
+                    android:text="SubTotal Consumos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_rowSpan="2"
+                    android:layout_columnSpan="2"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:text="US$"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvSubTotalConsumos"
+                    android:layout_rowSpan="2"
+                    android:layout_gravity="right|center_vertical" />
+
+            </GridLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:columnCount="3"
+                android:rowCount="2"
+                android:useDefaultMargins="true">
+
+                <TextView
+                    android:text="IVA 12%"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_rowSpan="2"
+                    android:layout_columnSpan="2"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:text="US$"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvIVA"
+                    android:layout_rowSpan="2"
+                    android:layout_gravity="right|center_vertical" />
+
+            </GridLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:columnCount="3"
+                android:rowCount="2"
+                android:useDefaultMargins="true">
+
+                <TextView
+                    android:text="Total Consumos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_rowSpan="2"
+                    android:layout_columnSpan="2"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:text="US$"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvTotalConsumos"
+                    android:layout_rowSpan="2"
+                    android:layout_gravity="right|center_vertical" />
+
+            </GridLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:columnCount="3"
+                android:rowCount="2"
+                android:useDefaultMargins="true">
+
+                <TextView
+                    android:text="Interes de Financiamiento Diferido"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_rowSpan="2"
+                    android:layout_columnSpan="2"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:text="US$"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvInteresFinanciamientoDiferido"
+                    android:layout_rowSpan="2"
+                    android:layout_gravity="right|center_vertical" />
+
+            </GridLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:columnCount="3"
+                android:rowCount="2"
+                android:useDefaultMargins="true">
+
+                <TextView
+                    android:text="Total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_rowSpan="2"
+                    android:layout_columnSpan="2"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:text="US$"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvTotal"
+                    android:layout_rowSpan="2"
+                    android:layout_gravity="right|center_vertical" />
+
+            </GridLayout>
+
+            <TextView
+                android:text="Con factor al: 0.00%"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvFactor"
+                android:layout_rowSpan="2"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:text="% Invesiones de $ 0.00"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvResumenCuotas"
+                android:layout_rowSpan="2"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:text="Interés Mensual de 0.00%"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvInteresMensual"
+                android:layout_rowSpan="2"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>
