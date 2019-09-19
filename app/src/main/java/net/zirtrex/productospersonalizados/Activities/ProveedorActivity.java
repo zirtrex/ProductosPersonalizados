@@ -3,6 +3,8 @@ package net.zirtrex.productospersonalizados.Activities;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,15 +25,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import net.zirtrex.productospersonalizados.Fragments.FinanciamientoFragment;
 import net.zirtrex.productospersonalizados.Fragments.FormasPagoFragment;
 import net.zirtrex.productospersonalizados.Fragments.LoginFragment;
-import net.zirtrex.productospersonalizados.Fragments.ProductsFragment;
 import net.zirtrex.productospersonalizados.Fragments.ProveedorPrincipalFragment;
 import net.zirtrex.productospersonalizados.Fragments.ProveedorProductsFragment;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.Usuarios;
-import net.zirtrex.productospersonalizados.Util.Utils;
 
 public class ProveedorActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -40,6 +39,13 @@ public class ProveedorActivity extends AppCompatActivity
     public static final String TAG ="ProveedorActivity";
 
     FirebaseAuth.AuthStateListener mAuthListener;
+
+    Toolbar toolbar;
+    public DrawerLayout drawer;
+    ActionBarDrawerToggle toggle;
+    NavigationView navigationView;
+
+    Fragment proveedorPrincipalFragment;
 
     TextView tvUserEmail;
     Button btnLogin, btnLogout;
@@ -55,20 +61,21 @@ public class ProveedorActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_proveedor);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
+        navigationView.setCheckedItem(R.id.nav_proveedor_inicio);
 
         View header = navigationView.getHeaderView(0);
 
@@ -85,7 +92,9 @@ public class ProveedorActivity extends AppCompatActivity
                     drawer.closeDrawer(GravityCompat.START);
                 }
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.content_proveedor, new LoginFragment(), LoginFragment.TAG)
+                        .replace(R.id.content_proveedor, new LoginFragment(), LoginFragment.TAG)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .addToBackStack(null)
                         .commit();
             }
         });
@@ -103,15 +112,35 @@ public class ProveedorActivity extends AppCompatActivity
             }
         });
 
-        if(Utils.validateScreen){
-            Fragment proveedorPrincipalFragment = new ProveedorPrincipalFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_proveedor, proveedorPrincipalFragment, ProveedorPrincipalFragment.TAG)
-                    .addToBackStack(null)
-                    .commit();
-
-            Utils.validateScreen = false;
+        if (savedInstanceState == null) {
+            initScreen();
+        } else {
+            proveedorPrincipalFragment = (ProveedorPrincipalFragment) getSupportFragmentManager().findFragmentByTag(ProveedorPrincipalFragment.TAG);
         }
+
+        this.getSupportFragmentManager().addOnBackStackChangedListener(
+            new FragmentManager.OnBackStackChangedListener() {
+                public void onBackStackChanged() {
+                    Fragment current = getSupportFragmentManager().findFragmentById(R.id.content_proveedor);;
+                    if (current instanceof ProveedorPrincipalFragment) {
+                        navigationView.setCheckedItem(R.id.nav_proveedor_inicio);
+                    }if (current instanceof ProveedorProductsFragment) {
+                        navigationView.setCheckedItem(R.id.nav_proveedor_productos);
+                    }if (current instanceof ProveedorProductsFragment) {
+                        navigationView.setCheckedItem(R.id.nav_proveedor_productos);
+                    } else {
+                        navigationView.setCheckedItem(R.id.nav_proveedor_pedidos);
+                    }
+                }
+            });
+    }
+
+    private void initScreen() {
+        proveedorPrincipalFragment = new ProveedorPrincipalFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_proveedor, proveedorPrincipalFragment, ProveedorPrincipalFragment.TAG)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
     }
 
     @Override
@@ -119,38 +148,63 @@ public class ProveedorActivity extends AppCompatActivity
         int id = item.getItemId();
 
         Fragment miFragment = null;
+        String tag = "";
         boolean fragmentSeleccionado = false;
 
-        if (id == R.id.nav_productos) {
+        if (id == R.id.nav_proveedor_inicio) {
 
-            miFragment = new ProductsFragment();
+            miFragment = new ProveedorPrincipalFragment();
+            tag = ProveedorPrincipalFragment.TAG;
             fragmentSeleccionado = true;
 
-        }else if (id == R.id.nav_financiamientos) {
+        }else if (id == R.id.nav_proveedor_productos) {
 
-            miFragment = new FinanciamientoFragment();
+            miFragment = new ProveedorProductsFragment();
+            tag = ProveedorProductsFragment.TAG;
             fragmentSeleccionado = true;
 
-        }else if (id == R.id.nav_formas_de_pago) {
+        }else if (id == R.id.nav_proveedor_pedidos) {
 
             miFragment = new FormasPagoFragment();
+            tag = "Hola";
             fragmentSeleccionado = true;
 
         }else{
-            miFragment = new ProveedorProductsFragment();
+            miFragment = new ProveedorPrincipalFragment();
+            tag = ProveedorPrincipalFragment.TAG;
             fragmentSeleccionado = true;
         }
 
         if (fragmentSeleccionado){
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_proveedor, miFragment, miFragment.getTag())
-                    .addToBackStack(null)
-                    .commit();
+
+            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(tag);
+
+            if(currentFragment == null){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.content_proveedor, miFragment, tag)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void getFirebaseAuthSession(){

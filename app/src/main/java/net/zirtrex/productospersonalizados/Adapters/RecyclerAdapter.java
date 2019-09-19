@@ -25,7 +25,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private final OnFragmentInteractionListener mListener;
 
-    private List<Productos> lProductos;
+    public List<Productos> lProductos;
     private Context context;
 
 

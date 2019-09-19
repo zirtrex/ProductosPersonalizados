@@ -1,7 +1,9 @@
 package net.zirtrex.productospersonalizados.Fragments;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,6 +39,7 @@ import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInterac
 import net.zirtrex.productospersonalizados.Models.EfectivoTarjetaContent;
 import net.zirtrex.productospersonalizados.Models.MateriaPrima;
 import net.zirtrex.productospersonalizados.Models.MateriaPrimaPojo;
+import net.zirtrex.productospersonalizados.Models.Productos;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +52,7 @@ import java.util.Map;
 
 public class ProveedorAgregarProductoFragment extends Fragment {
 
-    public static final String TAG = "ProveedorAgregarProductoFragment";
+    public static final String TAG = "AgregarProductoFragment";
 
     private OnProveedorFragmentInteractionListener mListener;
 
@@ -65,14 +68,12 @@ public class ProveedorAgregarProductoFragment extends Fragment {
 
     RecyclerView rvProductoMateriaPrima;
     ProveedorProductoMateriaPrimaRecyclerAdapter proveedorProductoMateriaPrimaRA;
-    static ArrayList<MateriaPrimaPojo> lProductoMateriaPrima;
+    static List<MateriaPrimaPojo> lProductoMateriaPrima = new ArrayList<>();
 
     Spinner spnrTarjetas, spnrCuotas;
-    Button btnAgregarMateriaPrima;
-    EditText tvEfectivo;
-    TextView tvSeleccionTipoPrenda, tvConsumos, tvSubTotalConsumos, tvIVA, tvTotalConsumos,
-            tvInteresFinanciamientoDiferido, tvTotal,
-            tvFactor, tvResumenCuotas, tvInteresMensual;
+    Button btnAgregarMateriaPrima, btnAgregarMaterialesIndirectos, btnGuardarProducto;
+    EditText txtGastosFinancieros, txtImgUrl, txtNombreProducto;
+    TextView tvSeleccionTipoPrenda;
     View view;
 
     Double montoTotal = 0.00;
@@ -108,8 +109,6 @@ public class ProveedorAgregarProductoFragment extends Fragment {
 
         rvProductoMateriaPrima = (RecyclerView) view.findViewById(R.id.rvProductoMateriaPrima);
 
-        lProductoMateriaPrima = new ArrayList<>();
-
         proveedorProductoMateriaPrimaRA = new ProveedorProductoMateriaPrimaRecyclerAdapter(getContext(), lProductoMateriaPrima, mListener);
         rvProductoMateriaPrima.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvProductoMateriaPrima.setAdapter(proveedorProductoMateriaPrimaRA);
@@ -125,21 +124,16 @@ public class ProveedorAgregarProductoFragment extends Fragment {
 
         spnrCuotasAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lCuotas);
         spnrCuotasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnrCuotas.setAdapter(spnrCuotasAdapter);
+        spnrCuotas.setAdapter(spnrCuotasAdapter);*/
 
-        btnGenerarPago = (Button) view.findViewById(R.id.btnGenerarPago);
-        tvEfectivo = (EditText) view.findViewById(R.id.tvEfectivo);
-        tvConsumos = (TextView) view.findViewById(R.id.tvConsumos);
-        tvSubTotalConsumos = (TextView) view.findViewById(R.id.tvSubTotalConsumos);
-        tvIVA = (TextView) view.findViewById(R.id.tvIVA);
-        tvTotalConsumos = (TextView) view.findViewById(R.id.tvTotalConsumos);
-        tvInteresFinanciamientoDiferido = (TextView) view.findViewById(R.id.tvInteresFinanciamientoDiferido);
-        tvTotal = (TextView) view.findViewById(R.id.tvTotal);
-        tvFactor = (TextView) view.findViewById(R.id.tvFactor);
-        tvResumenCuotas = (TextView) view.findViewById(R.id.tvResumenCuotas);
-        tvInteresMensual = (TextView) view.findViewById(R.id.tvInteresMensual);*/
-
+        //Botones
         btnAgregarMateriaPrima = (Button) view.findViewById(R.id.btnAgregarMateriaPrima);
+        btnAgregarMateriaPrima = (Button) view.findViewById(R.id.btnAgregarMateriaPrima);
+        btnGuardarProducto = (Button) view.findViewById(R.id.btnGuardarProducto);
+        //Cajas de texto
+        txtGastosFinancieros = (EditText) view.findViewById(R.id.txtGastosFinancieros);
+        txtImgUrl = (EditText) view.findViewById(R.id.txtImgUrl);
+        txtNombreProducto = (EditText) view.findViewById(R.id.txtNombreProducto);
 
         btnAgregarMateriaPrima.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +141,7 @@ public class ProveedorAgregarProductoFragment extends Fragment {
 
                 MateriaPrimaPojo materiaPrimaItem = new MateriaPrimaPojo();
                 materiaPrimaItem.setNombreMateriaPrima("Nombre Materia Prima");
-                materiaPrimaItem.setValorMateriaPrima(0);
+                materiaPrimaItem.setValorMateriaPrima(0.00);
                 lProductoMateriaPrima.add(materiaPrimaItem);
                 proveedorProductoMateriaPrimaRA.notifyDataSetChanged();
             }
@@ -186,13 +180,73 @@ public class ProveedorAgregarProductoFragment extends Fragment {
             }*/
         });
 
+        btnGuardarProducto.setOnClickListener(confirmarAgregarProducto);
+
         return view;
     }
 
-    public void verificarTipoPrenda(View v){
-        int id = rgTipoPrenda.getCheckedRadioButtonId();
-        radioButton = (RadioButton) v.findViewById(id);
-        tvSeleccionTipoPrenda.setText("Has elegido: " + radioButton.getText());
+    View.OnClickListener confirmarAgregarProducto = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+            builder.setMessage("¿Desea agregar el producto?");
+
+            builder.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    guardarProducto();
+                }
+            });
+            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
+    };
+
+    private void guardarProducto() {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        DatabaseReference productosDatabase  = database.getReference("productos");
+
+        Productos producto = new Productos();
+
+        String idProducto = productosDatabase.push().getKey();
+
+        producto.setIdProducto(idProducto);
+        producto.setNombreProducto(txtNombreProducto.getText().toString());
+        producto.setImgUrl(txtImgUrl.getText().toString());
+
+        Map<String, Double> materiasPrima = new HashMap<>();
+
+        for (int i = 0; i < lProductoMateriaPrima.size(); i++){
+            MateriaPrimaPojo materiaPrimaActual = lProductoMateriaPrima.get(i);
+            materiasPrima.put(materiaPrimaActual.getNombreMateriaPrima(), materiaPrimaActual.getValorMateriaPrima());
+        }
+
+        producto.setMateriaPrima(materiasPrima);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            producto.setIdUsuario(user.getUid());
+            productosDatabase.child(idProducto).setValue(producto);
+            Log.w(TAG , "Usuario Logueado");
+            Toast.makeText(getContext(), "Producto agregado correctamente",
+                    Toast.LENGTH_LONG).show();
+
+
+        }else {
+            Log.w(TAG , "Sin usuario activo");
+            Toast.makeText(getContext(), "Necesitas iniciar sesión para guardar los datos.",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     private void getCart() {

@@ -130,7 +130,12 @@ public class LoginFragment extends Fragment {
         mLoginFormView = view.findViewById(R.id.login_form);
         mProgressView = view.findViewById(R.id.login_progress);
 
-        final Fragment thisFragment = this;
+        getFirebaseAuthSession();
+
+        return view;
+    }
+
+    private void getFirebaseAuthSession(){
         mAuthListener = new FirebaseAuth.AuthStateListener(){
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -138,12 +143,10 @@ public class LoginFragment extends Fragment {
                 if(user != null){
                     String user_id = user.getUid();
                     DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
-
                     current_user_db.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Usuarios usuario = dataSnapshot.getValue(Usuarios.class);
-
                             if(usuario != null){
                                 if(usuario.getRol() == "cliente"){
                                     Log.w(TAG , "Cliente Logueado");
@@ -159,15 +162,13 @@ public class LoginFragment extends Fragment {
                         }
                     });
 
-                    getActivity().getSupportFragmentManager().beginTransaction().remove(thisFragment).commit();
+                    getActivity().getSupportFragmentManager().popBackStack();
 
                 }else {
                     Log.w(TAG , "Sin usuario activo");
                 }
             }
         };
-
-        return view;
     }
 
     private void populateLRol(){
@@ -268,23 +269,19 @@ public class LoginFragment extends Fragment {
     }
 
     protected void doLogin(String email, String password) {
-        final Fragment thisFragment = this;
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
-                        Log.w(TAG, "Usuario Válido");
-
-                        getActivity().getSupportFragmentManager().beginTransaction().remove(thisFragment).commit();
-                    }else{
-
-                        Log.w(TAG, "Error al intentar Ingresar", task.getException());
-                        String msg = "Usuario y/o Clave son incorrectos [" + task.getException().getMessage() + "]";
-                        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
-
-                    }
-                    showProgress(false);
+                if(task.isSuccessful()){
+                    Log.w(TAG, "Usuario Válido");
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }else{
+                    Log.w(TAG, "Error al intentar Ingresar", task.getException());
+                    String msg = "Usuario y/o Clave son incorrectos [" + task.getException().getMessage() + "]";
+                    Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+                }
+                showProgress(false);
                 }
             });
     }

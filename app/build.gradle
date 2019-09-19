@@ -16,6 +16,16 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def appName = "Productos_Personalizados"
+                    // outputFileName = appName + "-${variant.versionName}.apk"
+                    // custom name
+                    outputFileName = appName + "-${variant.versionName}.apk"
+                    // custom name with version
+                    //outputFileName = appName + "-${variant.versionName}.apk"
+                }
+            }
         }
     }
 

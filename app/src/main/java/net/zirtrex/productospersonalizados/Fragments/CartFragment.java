@@ -218,7 +218,7 @@ public class CartFragment extends Fragment implements View.OnClickListener{
         switch (view.getId()) {
             case R.id.btnFinanciamiento:
 
-                Fragment fFinanciamiento = new FinanciamientoFragment();
+                Fragment fFinanciamiento = new ProveedorPedidosFragment();
                 fFinanciamiento.setArguments(args);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.content_cliente, fFinanciamiento,"Fragment Financiamiento")

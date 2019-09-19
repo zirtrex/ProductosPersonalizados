@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/cv_producto_materia_prima"
-    android:layout_margin="5dp"
+    android:layout_margin="6dp"
     card_view:cardElevation="3dp"
     card_view:contentPadding="4dp"
     android:foreground="?selectableItemBackground"
@@ -19,7 +19,7 @@
 
         <EditText
             android:id="@+id/txtNombreMateriaPrima"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/activity_vertical_margin"
@@ -30,8 +30,9 @@
         <EditText
             android:id="@+id/txtValorMateriaPrima"
             android:layout_width="wrap_content"
+            android:minWidth="50dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="right"
             android:inputType="number"
             android:text="Valor Materia Prima"
             android:textSize="20sp" />

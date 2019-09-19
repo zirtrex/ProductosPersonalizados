@@ -26,7 +26,7 @@ public class ProveedorRecyclerAdapter extends RecyclerView.Adapter<ProveedorRecy
 
     private final OnProveedorFragmentInteractionListener mListener;
 
-    private List<Productos> lProductos;
+    public List<Productos> lProductos;
     private Context context;
 
 

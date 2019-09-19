@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +31,11 @@ public class ProveedorProductoMateriaPrimaRecyclerAdapter extends RecyclerView.A
 
     private final OnProveedorFragmentInteractionListener mListener;
 
-    private static ArrayList<MateriaPrimaPojo> lProductoMateriaPrima;
+    private List<MateriaPrimaPojo> lProductoMateriaPrima;
     private Context context;
 
 
-    public ProveedorProductoMateriaPrimaRecyclerAdapter(Context context, ArrayList<MateriaPrimaPojo> materiasPrimas, OnProveedorFragmentInteractionListener listener){
+    public ProveedorProductoMateriaPrimaRecyclerAdapter(Context context, List<MateriaPrimaPojo> materiasPrimas, OnProveedorFragmentInteractionListener listener){
         this.lProductoMateriaPrima = materiasPrimas;
         mListener = listener;
         this.context = context;
@@ -53,9 +55,13 @@ public class ProveedorProductoMateriaPrimaRecyclerAdapter extends RecyclerView.A
 
         MateriaPrimaPojo materiaPrima = lProductoMateriaPrima.get(position);
 
-        viewHolder.txtNombreMateriaPrima.setText(materiaPrima.getNombreMateriaPrima());
-        viewHolder.txtValorMateriaPrima.setText(String.valueOf(materiaPrima.getValorMateriaPrima()));
+        if(viewHolder.txtNombreMateriaPrima != null){
+            viewHolder.txtNombreMateriaPrima.setText(materiaPrima.getNombreMateriaPrima());
+        }
 
+        if(viewHolder.txtValorMateriaPrima != null){
+            viewHolder.txtValorMateriaPrima.setText(String.valueOf(materiaPrima.getValorMateriaPrima()));
+        }
     }
 
     @Override
@@ -79,13 +85,65 @@ public class ProveedorProductoMateriaPrimaRecyclerAdapter extends RecyclerView.A
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        public int currentItem;
         public EditText txtNombreMateriaPrima, txtValorMateriaPrima;
 
         public ViewHolder(View itemView) {
             super(itemView);
             txtNombreMateriaPrima = (EditText) itemView.findViewById(R.id.txtNombreMateriaPrima);
             txtValorMateriaPrima = (EditText) itemView.findViewById(R.id.txtValorMateriaPrima);
+
+            if(txtNombreMateriaPrima != null) {
+
+                txtNombreMateriaPrima.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        MateriaPrimaPojo materiaPrimaItem = lProductoMateriaPrima.get(getAdapterPosition());
+                        materiaPrimaItem.setNombreMateriaPrima(charSequence + "");
+                        lProductoMateriaPrima.set(getAdapterPosition(), materiaPrimaItem);
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
+            }
+            if(txtNombreMateriaPrima != null) {
+                txtValorMateriaPrima.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        MateriaPrimaPojo materiaPrimaItem = lProductoMateriaPrima.get(getAdapterPosition());
+
+                        try {
+                            materiaPrimaItem.setValorMateriaPrima(Double.parseDouble(charSequence + ""));
+                        }
+                        catch (NumberFormatException e) {
+                            materiaPrimaItem.setValorMateriaPrima(0.00);
+                        }
+
+                        lProductoMateriaPrima.set(getAdapterPosition(), materiaPrimaItem);
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
+            }
+
 
             /*itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

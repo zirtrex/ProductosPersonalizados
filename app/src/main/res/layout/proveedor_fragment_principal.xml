@@ -63,7 +63,7 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:id="@+id/imageButton4"
-                android:background="@drawable/get_money" />
+                android:background="@drawable/polo_azul" />
 
             <TextView
                 android:text="Ver productos"
@@ -81,7 +81,7 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:id="@+id/imageButton3"
-                android:background="@drawable/credit_card" />
+                android:background="@drawable/pedidos" />
 
             <TextView
                 android:text="Ver pedidos"
@@ -100,10 +100,10 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:id="@+id/imageButton5"
-                android:background="@drawable/money" />
+                android:background="@drawable/transfer" />
 
             <TextView
-                android:text="Ver pedidos"
+                android:text="Otros"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"

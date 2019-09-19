@@ -3,7 +3,7 @@ package net.zirtrex.productospersonalizados.Models;
 public class MateriaPrimaPojo {
 
     private String nombreMateriaPrima;
-    private double valorMateriaPrima;
+    private Double valorMateriaPrima;
 
     public MateriaPrimaPojo() {}
 
@@ -15,11 +15,11 @@ public class MateriaPrimaPojo {
         this.nombreMateriaPrima = nombreMateriaPrima;
     }
 
-    public double getValorMateriaPrima() {
+    public Double getValorMateriaPrima() {
         return valorMateriaPrima;
     }
 
-    public void setValorMateriaPrima(double valorMateriaPrima) {
+    public void setValorMateriaPrima(Double valorMateriaPrima) {
         this.valorMateriaPrima = valorMateriaPrima;
     }
 

@@ -1,16 +1,23 @@
 package net.zirtrex.productospersonalizados.Models;
 
+import java.util.Map;
+
 public class Productos{
 
     private String idProducto;
+    private String idUsuario;
     private String nombreProducto;
     private Double precio;
     private String imgUrl;
+    private Map <String, Double> materiaPrima;
+
 
     public Productos() {}
 
-    public Productos(String nombreProducto) {
+    public Productos(String nombreProducto, Map <String, Double> materiaPrima) {
         this.nombreProducto = nombreProducto;
+        this.materiaPrima = materiaPrima;
+
     }
 
     public String getIdProducto() {
@@ -19,6 +26,14 @@ public class Productos{
 
     public void setIdProducto(String idProducto) {
         this.idProducto = idProducto;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getNombreProducto() {
@@ -43,5 +58,13 @@ public class Productos{
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public Map <String, Double> getMateriaPrima() {
+        return materiaPrima;
+    }
+
+    public void setMateriaPrima(Map <String, Double> materiaPrima) {
+        this.materiaPrima = materiaPrima;
     }
 }

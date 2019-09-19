@@ -31,7 +31,7 @@ public class InversionAdapter extends RecyclerView.Adapter<InversionAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_financiamiento_item_list, parent, false);
+                .inflate(R.layout.proveedor_item_list_pedidos, parent, false);
         return new ViewHolder(view);
     }
 

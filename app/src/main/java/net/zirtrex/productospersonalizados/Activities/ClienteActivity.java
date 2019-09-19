@@ -29,7 +29,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Fragments.CartFragment;
-import net.zirtrex.productospersonalizados.Fragments.FinanciamientoFragment;
+import net.zirtrex.productospersonalizados.Fragments.ProveedorPedidosFragment;
 import net.zirtrex.productospersonalizados.Fragments.FormasPagoFragment;
 import net.zirtrex.productospersonalizados.Fragments.LoginFragment;
 import net.zirtrex.productospersonalizados.Fragments.ProductsFragment;
@@ -205,7 +205,7 @@ public class ClienteActivity extends AppCompatActivity
 
         }else if (id == R.id.nav_financiamientos) {
 
-            miFragment = new FinanciamientoFragment();
+            miFragment = new ProveedorPedidosFragment();
             fragmentSeleccionado = true;
 
         }else if (id == R.id.nav_formas_de_pago) {
