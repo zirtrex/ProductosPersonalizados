@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
-import net.zirtrex.productospersonalizados.Models.InversionesContent.Inversiones;
+import net.zirtrex.productospersonalizados.Models.PrecioVentaContent.Inversiones;
 
 import java.util.List;
 

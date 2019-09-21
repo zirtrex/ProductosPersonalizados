@@ -35,20 +35,20 @@ public class ProveedorPedidosFragment extends Fragment {
 
         getActivity().setTitle(getText(R.string.title_fragment_financiamiento));
 
-        /*if(getArguments() != null) {
+        if(getArguments() != null) {
             montoTotal = getArguments().getDouble("montoTotal");
         }
 
-        tvMontoTotal = (TextView) view.findViewById(R.id.tvMontoTotal);
+        /*tvMontoTotal = (TextView) view.findViewById(R.id.tvMontoTotal);
         String convertPrice = NumberFormat.getCurrencyInstance().format(montoTotal);
         tvMontoTotal.setText("El monto de compra total es: " + convertPrice);
 
 
-        //InversionesContent ic = new InversionesContent(montoTotal);
+        //PrecioVentaContent ic = new PrecioVentaContent(montoTotal);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rvFinanciamientos);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //recyclerView.setAdapter(new InversionAdapter(InversionesContent.INVERSIONES, mListener));*/
+        //recyclerView.setAdapter(new InversionAdapter(PrecioVentaContent.INVERSIONES, mListener));*/
 
         return view;
     }

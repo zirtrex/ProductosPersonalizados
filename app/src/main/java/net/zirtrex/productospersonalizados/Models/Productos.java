@@ -67,4 +67,16 @@ public class Productos{
     public void setMateriaPrima(Map <String, Double> materiaPrima) {
         this.materiaPrima = materiaPrima;
     }
+
+    @Override
+    public String toString() {
+        return "Productos{" +
+                "idProducto='" + idProducto + '\'' +
+                ", idUsuario='" + idUsuario + '\'' +
+                ", nombreProducto='" + nombreProducto + '\'' +
+                ", precio=" + precio +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", materiaPrima=" + materiaPrima +
+                '}';
+    }
 }

@@ -2,7 +2,6 @@ package net.zirtrex.productospersonalizados.Adapters;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,15 +13,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import net.zirtrex.productospersonalizados.Activities.R;
-import net.zirtrex.productospersonalizados.Fragments.ProductDetailFragment;
-import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
+import net.zirtrex.productospersonalizados.Fragments.ProveedorProductDetailFragment;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.Productos;
 
 import java.util.List;
 
 
-public class ProveedorRecyclerAdapter extends RecyclerView.Adapter<ProveedorRecyclerAdapter.ViewHolder> {
+public class ProveedorProductsRecyclerAdapter extends RecyclerView.Adapter<ProveedorProductsRecyclerAdapter.ViewHolder> {
 
     private final OnProveedorFragmentInteractionListener mListener;
 
@@ -30,14 +28,14 @@ public class ProveedorRecyclerAdapter extends RecyclerView.Adapter<ProveedorRecy
     private Context context;
 
 
-    public ProveedorRecyclerAdapter(Context context, List<Productos> productos, OnProveedorFragmentInteractionListener listener){
+    public ProveedorProductsRecyclerAdapter(Context context, List<Productos> productos, OnProveedorFragmentInteractionListener listener){
         this.lProductos = productos;
         mListener = listener;
         this.context = context;
     }
 
     @Override
-    public ProveedorRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ProveedorProductsRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
@@ -46,7 +44,7 @@ public class ProveedorRecyclerAdapter extends RecyclerView.Adapter<ProveedorRecy
     }
 
     @Override
-    public void onBindViewHolder(ProveedorRecyclerAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(ProveedorProductsRecyclerAdapter.ViewHolder viewHolder, int position) {
 
         Productos producto = lProductos.get(position);
 
@@ -107,17 +105,16 @@ public class ProveedorRecyclerAdapter extends RecyclerView.Adapter<ProveedorRecy
 
                     if (position != RecyclerView.NO_POSITION){
 
-                        // Creamos un nuevo Bundle para pasar el monto
+                        // Creamos un nuevo Bundle para pasar el idProducto
                         Bundle args = new Bundle();
                         // Colocamos el monto total
-                        args.putString("nombreProducto", getItem(position).getNombreProducto());
-                        args.putString("imgUrl", getItem(position).getImgUrl());
-                        args.putDouble("precio", getItem(position).getPrecio());
+                        args.putString("idProducto", getItem(position).getIdProducto());
 
-                        Fragment fProductDetailFragment = new ProductDetailFragment();
-                        fProductDetailFragment.setArguments(args);
+                        ProveedorProductDetailFragment proveedorProductDetailFragment = new ProveedorProductDetailFragment();
+                        proveedorProductDetailFragment.setArguments(args);
+
                         ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.content_cliente, fProductDetailFragment,"Fragment Product Detail")
+                                .replace(R.id.content_proveedor, proveedorProductDetailFragment,ProveedorProductDetailFragment.TAG)
                                 .addToBackStack(null)
                                 .commit();
 

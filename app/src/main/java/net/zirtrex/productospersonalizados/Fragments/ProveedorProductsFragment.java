@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Activities.R;
-import net.zirtrex.productospersonalizados.Adapters.ProveedorRecyclerAdapter;
+import net.zirtrex.productospersonalizados.Adapters.ProveedorProductsRecyclerAdapter;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.Productos;
 import net.zirtrex.productospersonalizados.Util.*;
@@ -37,7 +37,7 @@ public class ProveedorProductsFragment extends Fragment {
 
     private Toolbar toolbar;
     RecyclerView rvProductos;
-    ProveedorRecyclerAdapter recyclerAdapter;
+    ProveedorProductsRecyclerAdapter recyclerAdapter;
     List<Productos> productos;
 
     SwipeController swipeController = null;
@@ -83,7 +83,7 @@ public class ProveedorProductsFragment extends Fragment {
             }
         });
 
-        recyclerAdapter = new ProveedorRecyclerAdapter(getContext(), productos, mListener);
+        recyclerAdapter = new ProveedorProductsRecyclerAdapter(getContext(), productos, mListener);
         rvProductos.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvProductos.setAdapter(recyclerAdapter);
 

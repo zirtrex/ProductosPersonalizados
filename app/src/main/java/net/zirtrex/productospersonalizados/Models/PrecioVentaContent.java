@@ -5,22 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class InversionesContent {
+public class PrecioVentaContent {
 
-    public static final List<Inversiones> INVERSIONES = new ArrayList<Inversiones>();
+    Productos producto;
 
-    private static final int COUNT = 36;
+    private String[] materiaPrima = {"orillo","pedidos", "punto",
+            "anchoTela", "cantidadDePrenda", "densidadTela",
+            "largoTela", "mermaDeCorte", "mermaDeSegunda"};
 
-    private int[] nroCuotas = {3, 6, 9, 12, 18, 24, 36};
-    private double[] porcentajeInteres = {2.68, 4.73, 6.81, 8.91, 13.19, 17.58, 26.67};
+    public PrecioVentaContent(Productos producto) {
+        this.producto = producto;
 
-    double montoTotal = 0;
-    double impuesto;
 
-    public InversionesContent(double montoTotal) {
-        this.montoTotal = montoTotal;
-        this.impuesto = this.montoTotal * 0.12;
-        INVERSIONES.removeAll(INVERSIONES);
 
         for (int i = 1; i < nroCuotas.length; i++) {
 
@@ -33,8 +29,8 @@ public class InversionesContent {
         }
     }
 
-    private static void addInversion(Inversiones item) {
-        INVERSIONES.add(item);
+    private void calcularConsumoLineal(Double largoTela, ) {
+
     }
 
     private static Inversiones crearInversion(int nroCuota, String montoCuota) {
