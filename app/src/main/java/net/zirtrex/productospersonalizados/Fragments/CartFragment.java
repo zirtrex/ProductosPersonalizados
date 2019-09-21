@@ -148,15 +148,6 @@ public class CartFragment extends Fragment implements View.OnClickListener{
         btnFinanciamiento = (Button) view.findViewById(R.id.btnFinanciamiento);
         btnFinanciamiento.setOnClickListener(this);
 
-        btnFormaPago = (Button) view.findViewById(R.id.btnFormasDePago);
-        btnFormaPago.setOnClickListener(this);
-
-        btnRegalos = (Button) view.findViewById(R.id.btnRegalos);
-        btnRegalos.setOnClickListener(this);
-
-        btnComisiones = (Button) view.findViewById(R.id.btnComisiones);
-        btnComisiones.setOnClickListener(this);
-
         return view;
 
     }
@@ -224,21 +215,6 @@ public class CartFragment extends Fragment implements View.OnClickListener{
                         .replace(R.id.content_cliente, fFinanciamiento,"Fragment Financiamiento")
                         .addToBackStack(null)
                         .commit();
-
-                break;
-            case R.id.btnFormasDePago:
-
-                Fragment fFormasPago = new FormasPagoFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_cliente, fFormasPago,"Fragment Formas de Pago")
-                        .addToBackStack(null)
-                        .commit();
-
-                break;
-            case R.id.btnRegalos:
-
-                break;
-            case R.id.btnComisiones:
 
                 break;
             default:

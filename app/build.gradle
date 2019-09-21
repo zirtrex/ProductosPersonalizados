@@ -21,7 +21,7 @@ android {
                     def appName = "Productos_Personalizados"
                     // outputFileName = appName + "-${variant.versionName}.apk"
                     // custom name
-                    outputFileName = appName + "-${variant.versionName}.apk"
+                    outputFileName = appName + ".apk"
                     // custom name with version
                     //outputFileName = appName + "-${variant.versionName}.apk"
                 }

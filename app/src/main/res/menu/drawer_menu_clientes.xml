@@ -5,8 +5,8 @@
         <item
             android:id="@+id/nav_productos"
             android:icon="@drawable/checklist"
-            android:title="Productos" />
-        <item
+            android:title="Inicio" />
+        <!--<item
             android:id="@+id/nav_financiamientos"
             android:icon="@drawable/money"
             android:title="Financiamientos" />
@@ -25,7 +25,7 @@
         <item
             android:id="@+id/nav_comisiones"
             android:icon="@drawable/get_money"
-            android:title="Comisiones" />
+            android:title="Comisiones" />-->
     </group>
 
 </menu>

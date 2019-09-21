@@ -29,10 +29,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Fragments.CartFragment;
+import net.zirtrex.productospersonalizados.Fragments.ClienteProductsFragment;
 import net.zirtrex.productospersonalizados.Fragments.ProveedorPedidosFragment;
 import net.zirtrex.productospersonalizados.Fragments.FormasPagoFragment;
 import net.zirtrex.productospersonalizados.Fragments.LoginFragment;
-import net.zirtrex.productospersonalizados.Fragments.ProductsFragment;
 import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.Cart;
 import net.zirtrex.productospersonalizados.Util.Utils;
@@ -111,9 +111,9 @@ public class ClienteActivity extends AppCompatActivity
 
         if(Utils.validateScreen){
 
-            Fragment productsFragment = new ProductsFragment();
+            Fragment productsFragment = new ClienteProductsFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_cliente, productsFragment, ProductsFragment.TAG)
+                    .replace(R.id.content_cliente, productsFragment, ClienteProductsFragment.TAG)
                     .addToBackStack(null)
                     .commit();
 
@@ -196,14 +196,16 @@ public class ClienteActivity extends AppCompatActivity
         int id = item.getItemId();
 
         Fragment miFragment = null;
+        String tag = "";
         boolean fragmentSeleccionado = false;
 
         if (id == R.id.nav_productos) {
 
-            miFragment = new ProductsFragment();
+            miFragment = new ClienteProductsFragment();
+            tag = ClienteProductsFragment.TAG;
             fragmentSeleccionado = true;
 
-        }else if (id == R.id.nav_financiamientos) {
+        /*}else if (id == R.id.nav_financiamientos) {
 
             miFragment = new ProveedorPedidosFragment();
             fragmentSeleccionado = true;
@@ -226,13 +228,13 @@ public class ClienteActivity extends AppCompatActivity
         }else if (id == R.id.nav_comisiones) {
 
             miFragment = new FormasPagoFragment();
-            fragmentSeleccionado = true;
+            fragmentSeleccionado = true;*/
 
         }
 
         if (fragmentSeleccionado){
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_cliente, miFragment, miFragment.getTag())
+                    .replace(R.id.content_cliente, miFragment, tag)
                     .addToBackStack(null)
                     .commit();
         }

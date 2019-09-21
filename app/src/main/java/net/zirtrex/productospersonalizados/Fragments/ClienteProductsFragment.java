@@ -23,9 +23,9 @@ import net.zirtrex.productospersonalizados.Models.Productos;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ProductsFragment extends Fragment {
+public class ClienteProductsFragment extends Fragment {
 
-    public static final String TAG = "ProductsFragment";
+    public static final String TAG = "ClienteProductsFragment";
 
     private Toolbar toolbar;
     RecyclerView rvProductos;
@@ -34,7 +34,7 @@ public class ProductsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ProductsFragment() {
+    public ClienteProductsFragment() {
         // Required empty public constructor
     }
 
@@ -46,7 +46,7 @@ public class ProductsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_productos, container, false);
+        View view = inflater.inflate(R.layout.cliente_fragment_productos, container, false);
 
         getActivity().setTitle(getText(R.string.title_fragment_productos));
 

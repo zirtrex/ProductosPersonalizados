@@ -60,32 +60,8 @@
                 android:id="@+id/btnFinanciamiento"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ver Financiamientos" />
+                android:text="Comprar" />
 
-            <Button
-                android:id="@+id/btnFormasDePago"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ver Formas de Pago"/>
-
-            <Button
-                android:id="@+id/btnRegalos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ver Regalos"/>
-
-            <Button
-                android:id="@+id/btnComisiones"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ver Comisiones"/>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/flFinanciamiento">
-
-            </FrameLayout>
         </LinearLayout>
 
     </RelativeLayout>

@@ -18,7 +18,7 @@ public class PrecioVentaContent {
 
 
 
-        for (int i = 1; i < nroCuotas.length; i++) {
+        /*for (int i = 1; i < nroCuotas.length; i++) {
 
             double montoBruto = this.montoTotal + this.impuesto + porcentajeInteres[i];
             double montoCuota = montoBruto / nroCuotas[i];
@@ -26,10 +26,10 @@ public class PrecioVentaContent {
             String convertMontoCuota = NumberFormat.getCurrencyInstance().format(montoCuota);
 
             addInversion(crearInversion(nroCuotas[i], convertMontoCuota));
-        }
+        }*/
     }
 
-    private void calcularConsumoLineal(Double largoTela, ) {
+    private void calcularConsumoLineal(Double largoTela,Double anchoTela ) {
 
     }
 
