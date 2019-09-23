@@ -3,7 +3,7 @@ package net.zirtrex.productospersonalizados.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,7 +27,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Activities.R;
 import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
-import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.EfectivoTarjetaContent;
 
 import java.util.ArrayList;

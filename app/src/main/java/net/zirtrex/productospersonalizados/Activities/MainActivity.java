@@ -1,9 +1,9 @@
 package net.zirtrex.productospersonalizados.Activities;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.view.GravityCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +16,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import net.zirtrex.productospersonalizados.Fragments.LoginFragment;
 import net.zirtrex.productospersonalizados.Models.Usuarios;
 
 

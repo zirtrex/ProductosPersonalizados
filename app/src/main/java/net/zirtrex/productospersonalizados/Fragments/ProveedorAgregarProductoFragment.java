@@ -5,10 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,11 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Activities.R;
 import net.zirtrex.productospersonalizados.Adapters.ProveedorProductoMateriaPrimaRecyclerAdapter;
-import net.zirtrex.productospersonalizados.Adapters.RecyclerAdapter;
-import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
-import net.zirtrex.productospersonalizados.Models.EfectivoTarjetaContent;
-import net.zirtrex.productospersonalizados.Models.MateriaPrima;
 import net.zirtrex.productospersonalizados.Models.MateriaPrimaPojo;
 import net.zirtrex.productospersonalizados.Models.Productos;
 
@@ -45,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 

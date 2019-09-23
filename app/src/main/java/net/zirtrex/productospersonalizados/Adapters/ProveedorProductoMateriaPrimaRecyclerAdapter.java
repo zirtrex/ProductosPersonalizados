@@ -1,29 +1,19 @@
 package net.zirtrex.productospersonalizados.Adapters;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import net.zirtrex.productospersonalizados.Activities.R;
-import net.zirtrex.productospersonalizados.Fragments.ProductDetailFragment;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
-import net.zirtrex.productospersonalizados.Models.MateriaPrima;
 import net.zirtrex.productospersonalizados.Models.MateriaPrimaPojo;
-import net.zirtrex.productospersonalizados.Models.Productos;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
