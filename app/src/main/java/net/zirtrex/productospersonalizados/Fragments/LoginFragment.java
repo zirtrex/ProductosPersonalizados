@@ -3,12 +3,15 @@ package net.zirtrex.productospersonalizados.Fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,6 +40,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import net.zirtrex.productospersonalizados.Activities.ClienteActivity;
+import net.zirtrex.productospersonalizados.Activities.ProveedorActivity;
 import net.zirtrex.productospersonalizados.Activities.R;
 import net.zirtrex.productospersonalizados.Models.Usuarios;
 
@@ -148,6 +153,8 @@ public class LoginFragment extends Fragment {
                                     Log.w(TAG , "Cliente Logueado");
                                 }else if(usuario.getRol() == "proveedor"){
                                     Log.w(TAG , "Proveedor Logueado");
+                                    //NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_proveedor);
+                                    //navController.navigate(R.id.proveedorPrincipalFragment);
                                 }
                             }
                         }
@@ -158,7 +165,7 @@ public class LoginFragment extends Fragment {
                         }
                     });
 
-                    getActivity().getSupportFragmentManager().popBackStack();
+                    //getActivity().getSupportFragmentManager().popBackStack();
 
                 }else {
                     Log.w(TAG , "Sin usuario activo");
@@ -271,7 +278,17 @@ public class LoginFragment extends Fragment {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Log.w(TAG, "Usuario Válido");
-                    getActivity().getSupportFragmentManager().popBackStack();
+                    Activity activity = getActivity();
+
+                    if(activity instanceof ProveedorActivity){
+                        Log.w(TAG, "Es proveedor activity");
+                        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_proveedor);
+                        navController.navigate(R.id.proveedorPrincipalFragment);
+                    }else if(activity instanceof ClienteActivity){
+                        NavController navController = Navigation.findNavController(getActivity(), R.id.content_cliente);
+                        //navController.navigate(R.id.);
+                    }
+
                 }else{
                     Log.w(TAG, "Error al intentar Ingresar", task.getException());
                     String msg = "Usuario y/o Clave son incorrectos [" + task.getException().getMessage() + "]";

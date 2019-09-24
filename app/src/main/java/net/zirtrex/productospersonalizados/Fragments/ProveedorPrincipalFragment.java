@@ -3,7 +3,7 @@ package net.zirtrex.productospersonalizados.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
+
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +63,7 @@ public class ProveedorPrincipalFragment extends Fragment {
         @Override
         public void onClick(View v) {
             getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_proveedor, new ProveedorAgregarProductoFragment(), ProveedorAgregarProductoFragment.TAG)
+                .replace(R.id.nav_host_fragment_content_proveedor, new ProveedorAgregarProductoFragment(), ProveedorAgregarProductoFragment.TAG)
                 .addToBackStack(null)
                 .commit();
         }

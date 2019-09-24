@@ -32,6 +32,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getFirebaseAuthSession();
+
+        btnClientes = (Button) findViewById(R.id.btnClientes);
+        btnProveedores = (Button) findViewById(R.id.btnProveedores);
+
+        btnClientes.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.w(TAG , "Cliente Logueado");
+                Intent intent = new Intent(getApplicationContext(), ClienteActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+
+        btnProveedores.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.w(TAG , "Proveedor Logueado");
+                Intent intent = new Intent(getApplicationContext(), ProveedorActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void getFirebaseAuthSession(){
         mAuthListener = new FirebaseAuth.AuthStateListener(){
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -72,29 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
-        btnClientes = (Button) findViewById(R.id.btnClientes);
-        btnProveedores = (Button) findViewById(R.id.btnProveedores);
-
-        btnClientes.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Log.w(TAG , "Cliente Logueado");
-                Intent intent = new Intent(getApplicationContext(), ClienteActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
-
-        btnProveedores.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Log.w(TAG , "Proveedor Logueado");
-                Intent intent = new Intent(getApplicationContext(), ProveedorActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override

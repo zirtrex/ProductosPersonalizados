@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +34,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Activities.R;
 import net.zirtrex.productospersonalizados.Adapters.ProveedorProductoMateriaPrimaRecyclerAdapter;
+import net.zirtrex.productospersonalizados.Adapters.SpinnerAdapter;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
+import net.zirtrex.productospersonalizados.Models.MateriaPrima;
 import net.zirtrex.productospersonalizados.Models.MateriaPrimaPojo;
 import net.zirtrex.productospersonalizados.Models.Productos;
 
@@ -65,6 +68,7 @@ public class ProveedorAgregarProductoFragment extends Fragment {
     ProveedorProductoMateriaPrimaRecyclerAdapter proveedorProductoMateriaPrimaRA;
     static List<MateriaPrimaPojo> lProductoMateriaPrima = new ArrayList<>();
 
+    SpinnerAdapter spAdap;
     Spinner spnrTarjetas, spnrCuotas;
     Button btnAgregarMateriaPrima, btnAgregarMaterialesIndirectos, btnGuardarProducto;
     EditText txtGastosFinancieros, txtImgUrl, txtNombreProducto;
@@ -108,16 +112,40 @@ public class ProveedorAgregarProductoFragment extends Fragment {
         rvProductoMateriaPrima.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvProductoMateriaPrima.setAdapter(proveedorProductoMateriaPrimaRA);
 
-        /*spnrTarjetas = (Spinner) view.findViewById(R.id.spnrTarjetas);
+        spnrTarjetas = (Spinner) view.findViewById(R.id.spnrTarjetas);
         spnrCuotas = (Spinner) view.findViewById(R.id.spnrCuotas);
 
-        getCart();
+        //getCart();
 
-        spnrTarjetaAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lTarjetas);
-        spnrTarjetaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnrTarjetas.setAdapter(spnrTarjetaAdapter);
+        MateriaPrimaPojo[] mp = new MateriaPrimaPojo[2];
 
-        spnrCuotasAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lCuotas);
+        mp[0] = new MateriaPrimaPojo();
+        mp[0].setNombreMateriaPrima("materia1");
+        mp[0].setValorMateriaPrima(0.003);
+        mp[1] = new MateriaPrimaPojo();
+        mp[1].setNombreMateriaPrima("materia2");
+        mp[1].setValorMateriaPrima(0.05);
+
+        spAdap = new SpinnerAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, mp);
+
+        //pnrTarjetaAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lTarjetas);
+        //spnrTarjetaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnrTarjetas.setAdapter(spAdap);
+
+        spnrTarjetas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                // Here you get the current item (a User object) that is selected by its position
+                MateriaPrimaPojo mp = spAdap.getItem(position);
+                // Here you can do the action you want to...
+                Toast.makeText(getActivity(), "ID: " + mp.getNombreMateriaPrima() + "\nName: " + mp.getValorMateriaPrima(),
+                        Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapter) {  }
+        });
+
+        /*spnrCuotasAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lCuotas);
         spnrCuotasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnrCuotas.setAdapter(spnrCuotasAdapter);*/
 

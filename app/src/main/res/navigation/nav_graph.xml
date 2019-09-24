@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/proveedorAgregarProductoFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="net.zirtrex.productospersonalizados.Fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+
+    <fragment
+        android:id="@+id/proveedorPrincipalFragment"
+        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorPrincipalFragment"
+        android:label="proveedor_fragment_principal"
+        tools:layout="@layout/proveedor_fragment_principal" />
+
+    <fragment
+        android:id="@+id/proveedorProductDetailFragment"
+        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorProductDetailFragment"
+        android:label="ProveedorProductDetailFragment"
+        tools:layout="@layout/proveedor_fragment_product_detail" />
+
+    <fragment
+        android:id="@+id/proveedorProductsFragment"
+        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorProductsFragment"
+        android:label="proveedor_fragment_productos"
+        tools:layout="@layout/proveedor_fragment_productos" />
+    <fragment
+        android:id="@+id/proveedorAgregarProductoFragment"
+        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorAgregarProductoFragment"
+        android:label="proveedor_fragment_agregar_producto"
+        tools:layout="@layout/proveedor_fragment_agregar_producto" />
+
+
+</navigation>

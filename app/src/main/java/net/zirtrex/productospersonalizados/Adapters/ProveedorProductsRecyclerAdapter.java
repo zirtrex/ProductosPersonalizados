@@ -114,7 +114,7 @@ public class ProveedorProductsRecyclerAdapter extends RecyclerView.Adapter<Prove
                         proveedorProductDetailFragment.setArguments(args);
 
                         ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.content_proveedor, proveedorProductDetailFragment,ProveedorProductDetailFragment.TAG)
+                                .replace(R.id.nav_host_fragment_content_proveedor, proveedorProductDetailFragment,ProveedorProductDetailFragment.TAG)
                                 .addToBackStack(null)
                                 .commit();
 

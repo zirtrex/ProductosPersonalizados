@@ -11,6 +11,11 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,9 +46,10 @@ public class ProveedorActivity extends AppCompatActivity
     FirebaseAuth.AuthStateListener mAuthListener;
 
     Toolbar toolbar;
-    public DrawerLayout drawer;
-    ActionBarDrawerToggle toggle;
+    public DrawerLayout drawerLayout;
     NavigationView navigationView;
+    private AppBarConfiguration mAppBarConfiguration;
+    public NavController navController;
 
     Fragment proveedorPrincipalFragment;
 
@@ -66,16 +72,24 @@ public class ProveedorActivity extends AppCompatActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_proveedor_inicio,
+                R.id.nav_proveedor_productos,
+                R.id.nav_proveedor_pedidos)
+                .setDrawerLayout(drawerLayout)
+                .build();
+
+
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
-        navigationView.setCheckedItem(R.id.nav_proveedor_inicio);
+        //navigationView.setCheckedItem(R.id.nav_proveedor_inicio);
+
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_proveedor);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
 
         View header = navigationView.getHeaderView(0);
 
@@ -88,11 +102,11 @@ public class ProveedorActivity extends AppCompatActivity
         btnLogin.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if (drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_proveedor, new LoginFragment(), LoginFragment.TAG)
+                        .replace(R.id.nav_host_fragment_content_proveedor, new LoginFragment(), LoginFragment.TAG)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .addToBackStack(null)
                         .commit();
@@ -103,8 +117,8 @@ public class ProveedorActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                if (drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
                 btnLogin.setVisibility(View.VISIBLE);
                 btnLogout.setVisibility(View.GONE);
@@ -113,15 +127,15 @@ public class ProveedorActivity extends AppCompatActivity
         });
 
         if (savedInstanceState == null) {
-            initScreen();
+            //initScreen();
         } else {
-            proveedorPrincipalFragment = (ProveedorPrincipalFragment) getSupportFragmentManager().findFragmentByTag(ProveedorPrincipalFragment.TAG);
+            //proveedorPrincipalFragment = (ProveedorPrincipalFragment) getSupportFragmentManager().findFragmentByTag(ProveedorPrincipalFragment.TAG);
         }
 
         this.getSupportFragmentManager().addOnBackStackChangedListener(
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
-                    Fragment current = getSupportFragmentManager().findFragmentById(R.id.content_proveedor);;
+                    Fragment current = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_proveedor);;
                     if (current instanceof ProveedorPrincipalFragment) {
                         navigationView.setCheckedItem(R.id.nav_proveedor_inicio);
                     }if (current instanceof ProveedorProductsFragment) {
@@ -138,13 +152,15 @@ public class ProveedorActivity extends AppCompatActivity
     private void initScreen() {
         proveedorPrincipalFragment = new ProveedorPrincipalFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_proveedor, proveedorPrincipalFragment, ProveedorPrincipalFragment.TAG)
+                .replace(R.id.nav_host_fragment_content_proveedor, proveedorPrincipalFragment, ProveedorPrincipalFragment.TAG)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        item.setChecked(true);
+        drawerLayout.closeDrawer(GravityCompat.START);
         int id = item.getItemId();
 
         Fragment miFragment = null;
@@ -152,54 +168,60 @@ public class ProveedorActivity extends AppCompatActivity
         boolean fragmentSeleccionado = false;
 
         if (id == R.id.nav_proveedor_inicio) {
-
-            miFragment = new ProveedorPrincipalFragment();
+            navController.navigate(R.id.proveedorPrincipalFragment);
+            /*miFragment = new ProveedorPrincipalFragment();
             tag = ProveedorPrincipalFragment.TAG;
-            fragmentSeleccionado = true;
+            fragmentSeleccionado = true;*/
 
         }else if (id == R.id.nav_proveedor_productos) {
 
-            miFragment = new ProveedorProductsFragment();
+            /*miFragment = new ProveedorProductsFragment();
             tag = ProveedorProductsFragment.TAG;
-            fragmentSeleccionado = true;
+            fragmentSeleccionado = true;*/
 
         }else if (id == R.id.nav_proveedor_pedidos) {
 
-            miFragment = new FormasPagoFragment();
+            /*miFragment = new FormasPagoFragment();
             tag = "Hola";
-            fragmentSeleccionado = true;
+            fragmentSeleccionado = true;*/
 
         }else{
-            miFragment = new ProveedorPrincipalFragment();
+            /*miFragment = new ProveedorPrincipalFragment();
             tag = ProveedorPrincipalFragment.TAG;
-            fragmentSeleccionado = true;
+            fragmentSeleccionado = true;*/
         }
 
         if (fragmentSeleccionado){
 
-            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(tag);
+            /*Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(tag);
 
             if(currentFragment == null){
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_proveedor, miFragment, tag)
+                        .replace(R.id.nav_host_fragment_content_proveedor, miFragment, tag)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .addToBackStack(null)
                         .commit();
-            }
+            }*/
         }
 
-        drawer.closeDrawer(GravityCompat.START);
+
         return true;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_proveedor);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         }
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
