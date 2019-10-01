@@ -3,19 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ProveedorActivity"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/drawer_layout_proveedor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <include
-        layout="@layout/app_bar_proveedor"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/nav_view_proveedor"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
@@ -24,5 +19,10 @@
         app:menu="@menu/drawer_menu_proveedores"
         app:itemTextColor="@color/colorPrimaryDark"
         app:insetForeground="@color/colorPrimary" />
+
+    <include
+        layout="@layout/app_bar_proveedor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

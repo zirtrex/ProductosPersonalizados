@@ -282,10 +282,10 @@ public class LoginFragment extends Fragment {
 
                     if(activity instanceof ProveedorActivity){
                         Log.w(TAG, "Es proveedor activity");
-                        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_proveedor);
-                        navController.navigate(R.id.proveedorPrincipalFragment);
+                        //NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_proveedor);
+                        //navController.navigate(R.id.proveedorPrincipalFragment);
                     }else if(activity instanceof ClienteActivity){
-                        NavController navController = Navigation.findNavController(getActivity(), R.id.content_cliente);
+                        //NavController navController = Navigation.findNavController(getActivity(), R.id.content_cliente);
                         //navController.navigate(R.id.);
                     }
 

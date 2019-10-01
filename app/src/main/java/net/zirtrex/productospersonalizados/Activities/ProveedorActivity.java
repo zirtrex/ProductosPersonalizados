@@ -17,6 +17,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -70,10 +71,10 @@ public class ProveedorActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        drawerLayout = findViewById(R.id.drawer_layout_proveedor);
+        navigationView =  findViewById(R.id.nav_view_proveedor);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_proveedor_inicio,
@@ -83,11 +84,12 @@ public class ProveedorActivity extends AppCompatActivity
                 .build();
 
 
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setItemIconTintList(null);
+        //navigationView.setNavigationItemSelectedListener(this);
+        //navigationView.setItemIconTintList(null);
         //navigationView.setCheckedItem(R.id.nav_proveedor_inicio);
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_proveedor);
+
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
@@ -132,7 +134,7 @@ public class ProveedorActivity extends AppCompatActivity
             //proveedorPrincipalFragment = (ProveedorPrincipalFragment) getSupportFragmentManager().findFragmentByTag(ProveedorPrincipalFragment.TAG);
         }
 
-        this.getSupportFragmentManager().addOnBackStackChangedListener(
+        /*this.getSupportFragmentManager().addOnBackStackChangedListener(
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
                     Fragment current = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_proveedor);;
@@ -146,7 +148,7 @@ public class ProveedorActivity extends AppCompatActivity
                         navigationView.setCheckedItem(R.id.nav_proveedor_pedidos);
                     }
                 }
-            });
+            });*/
     }
 
     private void initScreen() {
@@ -168,7 +170,7 @@ public class ProveedorActivity extends AppCompatActivity
         boolean fragmentSeleccionado = false;
 
         if (id == R.id.nav_proveedor_inicio) {
-            navController.navigate(R.id.proveedorPrincipalFragment);
+            //navController.navigate(R.id.proveedorPrincipalFragment);
             /*miFragment = new ProveedorPrincipalFragment();
             tag = ProveedorPrincipalFragment.TAG;
             fragmentSeleccionado = true;*/
@@ -205,6 +207,12 @@ public class ProveedorActivity extends AppCompatActivity
         }
 
 
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
 
