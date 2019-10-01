@@ -9,14 +9,16 @@ import android.widget.TextView;
 
 import net.zirtrex.productospersonalizados.Models.MateriaPrimaPojo;
 
+import java.util.List;
+
 public class SpinnerAdapter extends ArrayAdapter<MateriaPrimaPojo> {
 
 
     private Context context;
     // Your custom values for the spinner (User)
-    private MateriaPrimaPojo[] values;
+    private List<MateriaPrimaPojo> values;
 
-    public SpinnerAdapter(Context context, int textViewResourceId, MateriaPrimaPojo[] values) {
+    public SpinnerAdapter(Context context, int textViewResourceId, List<MateriaPrimaPojo> values) {
         super(context, textViewResourceId, values);
         this.context = context;
         this.values = values;
@@ -24,12 +26,12 @@ public class SpinnerAdapter extends ArrayAdapter<MateriaPrimaPojo> {
 
     @Override
     public int getCount(){
-        return values.length;
+        return values.size();
     }
 
     @Override
     public MateriaPrimaPojo getItem(int position){
-        return values[position];
+        return values.get(position);
     }
 
     @Override
@@ -43,9 +45,7 @@ public class SpinnerAdapter extends ArrayAdapter<MateriaPrimaPojo> {
 
         TextView label = (TextView) super.getView(position, convertView, parent);
         label.setTextColor(Color.BLACK);
-
-        label.setText(values[position].getNombreMateriaPrima());
-
+        label.setText(String.valueOf(values.get(position).getValorMateriaPrima()));
 
         return label;
     }
@@ -54,7 +54,7 @@ public class SpinnerAdapter extends ArrayAdapter<MateriaPrimaPojo> {
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         TextView label = (TextView) super.getDropDownView(position, convertView, parent);
         label.setTextColor(Color.BLACK);
-        label.setText(values[position].getNombreMateriaPrima());
+        label.setText(String.valueOf(values.get(position).getValorMateriaPrima()));
 
         return label;
     }

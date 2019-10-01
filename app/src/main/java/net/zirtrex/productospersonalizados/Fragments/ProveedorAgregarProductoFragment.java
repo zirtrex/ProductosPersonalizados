@@ -58,6 +58,7 @@ public class ProveedorAgregarProductoFragment extends Fragment {
 
     public static List<String> lTarjetas = new ArrayList<>();
     public static List<Integer> lCuotas = new ArrayList<Integer>();
+    public static List<MateriaPrimaPojo> mp = new ArrayList<>();
 
     Map<String, HashMap<Integer, Double>> hmTarjetas = new HashMap<String, HashMap<Integer, Double>>();
 
@@ -117,18 +118,26 @@ public class ProveedorAgregarProductoFragment extends Fragment {
 
         //getCart();
 
-        MateriaPrimaPojo[] mp = new MateriaPrimaPojo[2];
 
-        mp[0] = new MateriaPrimaPojo();
-        mp[0].setNombreMateriaPrima("materia1");
-        mp[0].setValorMateriaPrima(0.003);
-        mp[1] = new MateriaPrimaPojo();
-        mp[1].setNombreMateriaPrima("materia2");
-        mp[1].setValorMateriaPrima(0.05);
+
+        MateriaPrimaPojo m1 = new MateriaPrimaPojo();
+        m1.setNombreMateriaPrima("materia1");
+        m1.setValorMateriaPrima(0.003);
+        mp.add(m1);
+
+        MateriaPrimaPojo m2 = new MateriaPrimaPojo();
+        m2.setNombreMateriaPrima("materia2");
+        m2.setValorMateriaPrima(0.05);
+        mp.add(m2);
+
+        MateriaPrimaPojo m3 = new MateriaPrimaPojo();
+        m3.setNombreMateriaPrima("materia3");
+        m3.setValorMateriaPrima(0.08);
+        mp.add(m3);
 
         spAdap = new SpinnerAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, mp);
 
-        //pnrTarjetaAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lTarjetas);
+        //spnrTarjetaAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lTarjetas);
         //spnrTarjetaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnrTarjetas.setAdapter(spAdap);
 
@@ -144,6 +153,12 @@ public class ProveedorAgregarProductoFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapter) {  }
         });
+
+        MateriaPrimaPojo m4 = new MateriaPrimaPojo();
+        m3.setNombreMateriaPrima("materia3");
+        m3.setValorMateriaPrima(0.08);
+
+        seleccionarSpinner(m2);
 
         /*spnrCuotasAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lCuotas);
         spnrCuotasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -206,6 +221,21 @@ public class ProveedorAgregarProductoFragment extends Fragment {
         btnGuardarProducto.setOnClickListener(confirmarAgregarProducto);
 
         return view;
+    }
+
+    private void  seleccionarSpinner(MateriaPrimaPojo objetoSeleccionado){
+
+        double valorEntrante =  objetoSeleccionado.getValorMateriaPrima();
+        int posicion = 0;
+
+        for (int i = 0; i < mp.size(); i++){
+            if(valorEntrante == mp.get(i).getValorMateriaPrima()){
+                posicion = i;
+                break;
+            }
+        }
+
+        spnrTarjetas.setSelection(posicion);
     }
 
     View.OnClickListener confirmarAgregarProducto = new View.OnClickListener() {
