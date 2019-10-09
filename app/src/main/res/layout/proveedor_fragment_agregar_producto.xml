@@ -68,13 +68,36 @@
             android:textStyle="normal|bold"
             android:textColor="@color/colorPrimaryDark"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvProductoMateriaPrima"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:visibility="visible" />
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!--<AutoCompleteTextView
+                android:id="@+id/actvNombreMateriaPrima"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:completionThreshold="0"
+                android:hint="Seleccione materia prima" />-->
+
+            <Spinner
+                android:id="@+id/spnrNombreMateriaPrima"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"/>
+
+            <EditText
+                android:id="@+id/txtValorMateriaPrima"
+                android:layout_width="wrap_content"
+                android:minWidth="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:inputType="numberDecimal"
+                android:hint="Valor Materia Prima"
+                android:textSize="18sp" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnAgregarMateriaPrima"
@@ -83,14 +106,47 @@
             android:text="Agregar Materia Prima"
             android:layout_gravity="center" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProductoMateriaPrima"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:visibility="gone"
+            tools:listitem="@layout/proveedor_card_view_producto" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MaterialesIndirectos:"
+            android:text="Materiales Indirectos:"
             android:layout_gravity="center_vertical"
             android:textSize="18sp"
             android:textStyle="normal|bold"
             android:textColor="@color/colorPrimaryDark"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spnrMaterialesIndirectos"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" />
+
+            <EditText
+                android:id="@+id/txtValorMaterialIndirecto"
+                android:layout_width="wrap_content"
+                android:minWidth="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:inputType="numberDecimal"
+                android:hint="Valor Material Indirecto"
+                android:textSize="18sp" />
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvProductoMaterialesIndirectos"
@@ -98,7 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnAgregarMaterialesIndirectos"
@@ -177,18 +233,6 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:text="Guardar Producto"
             android:layout_gravity="center" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spnrTarjetas"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spnrCuotas"
-            android:layout_weight="1" />
 
     </LinearLayout>
 </ScrollView>

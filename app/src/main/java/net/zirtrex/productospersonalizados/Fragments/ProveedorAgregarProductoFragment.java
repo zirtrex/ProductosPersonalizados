@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,8 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -33,17 +34,19 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Activities.R;
+import net.zirtrex.productospersonalizados.Adapters.MateriaPrimaSpinnerAdapter;
+import net.zirtrex.productospersonalizados.Adapters.MaterialIndirectoSpinnerAdapter;
 import net.zirtrex.productospersonalizados.Adapters.ProveedorProductoMateriaPrimaRecyclerAdapter;
-import net.zirtrex.productospersonalizados.Adapters.SpinnerAdapter;
+import net.zirtrex.productospersonalizados.Adapters.ProveedorProductoMaterialesIndirectosRecyclerAdapter;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
-import net.zirtrex.productospersonalizados.Models.MateriaPrima;
+import net.zirtrex.productospersonalizados.Models.MateriaPrimaAutocomplete;
 import net.zirtrex.productospersonalizados.Models.MateriaPrimaPojo;
+import net.zirtrex.productospersonalizados.Models.MaterialIndirectoAutocomplete;
+import net.zirtrex.productospersonalizados.Models.MaterialesIndirectosPojo;
 import net.zirtrex.productospersonalizados.Models.Productos;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,176 +57,189 @@ public class ProveedorAgregarProductoFragment extends Fragment {
 
     private OnProveedorFragmentInteractionListener mListener;
 
-    ArrayAdapter spnrTarjetaAdapter, spnrCuotasAdapter;
+    ArrayList<MateriaPrimaPojo> lProductoMateriaPrima = new ArrayList<>();
+    ArrayList<MaterialesIndirectosPojo> lProductoMaterialesIndirectos = new ArrayList<>();
 
-    public static List<String> lTarjetas = new ArrayList<>();
-    public static List<Integer> lCuotas = new ArrayList<Integer>();
-    public static List<MateriaPrimaPojo> mp = new ArrayList<>();
+    List<MateriaPrimaAutocomplete> lMateriaPrimaAutocomplete = new ArrayList<>();
+    List<MaterialIndirectoAutocomplete> lMaterialIndirectoAutocomplete = new ArrayList<>();
 
     Map<String, HashMap<Integer, Double>> hmTarjetas = new HashMap<String, HashMap<Integer, Double>>();
 
     RadioGroup rgTipoPrenda;
     RadioButton radioButton;
 
-    RecyclerView rvProductoMateriaPrima;
-    ProveedorProductoMateriaPrimaRecyclerAdapter proveedorProductoMateriaPrimaRA;
-    static List<MateriaPrimaPojo> lProductoMateriaPrima = new ArrayList<>();
+    RecyclerView rvProductoMateriaPrima, rvProductoMaterialesIndirectos;
+    ProveedorProductoMateriaPrimaRecyclerAdapter ppmpRecyclerAdapter;
+    ProveedorProductoMaterialesIndirectosRecyclerAdapter ppmiRecyclerAdapter;
 
-    SpinnerAdapter spAdap;
-    Spinner spnrTarjetas, spnrCuotas;
+    //Spinners Adapters
+    MateriaPrimaSpinnerAdapter materiaPrimaSA;
+    MaterialIndirectoSpinnerAdapter materialIndirectoSA;
+
+    Spinner spnrNombreMateriaPrima, spnrMaterialesIndirectos;
     Button btnAgregarMateriaPrima, btnAgregarMaterialesIndirectos, btnGuardarProducto;
-    EditText txtGastosFinancieros, txtImgUrl, txtNombreProducto;
+    EditText txtGastosFinancieros, txtImgUrl, txtNombreProducto, txtValorMateriaPrima, txtValorMaterialIndirecto;
     TextView tvSeleccionTipoPrenda;
-    View view;
 
-    Double montoTotal = 0.00;
-    String tarjetaSeleccionada;
-    int nroCuotasSeleccionado;
+    View view;
 
     public ProveedorAgregarProductoFragment() {
         // Required empty public constructor
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnProveedorFragmentInteractionListener) {
+            mListener = (OnProveedorFragmentInteractionListener) context;
+            //this.montoTotal = mListener.getMonto();
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " debe Implementarse OnProveedorFragmentInteractionListener");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.proveedor_fragment_agregar_producto, container, false);
 
+        //Radio Group para tipo de prenda
         rgTipoPrenda = (RadioGroup) view.findViewById(R.id.rgTipoPrenda);
         tvSeleccionTipoPrenda = (TextView) view.findViewById(R.id.tvSeleccionTipoPrenda);
+        rgTipoPrenda.setOnCheckedChangeListener(elegirTipoPrenda);
 
-        rgTipoPrenda.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId) {
-                    case R.id.rbPolos:
-                        tvSeleccionTipoPrenda.setText("Has elegido: Polos" );
-                        break;
-                    case R.id.rbPantalones:
-                        tvSeleccionTipoPrenda.setText("Has elegido: Pantalones" );
-                        break;
-                    case R.id.rbZapatos:
-                        tvSeleccionTipoPrenda.setText("Has elegido: Zapatos" );
-                        break;
-                }
-            }
-        });
+        //Spinner para Materia Prima
+        populateLMateriaPrimaAutocomplete();
+        spnrNombreMateriaPrima = (Spinner) view.findViewById(R.id.spnrNombreMateriaPrima);
+        materiaPrimaSA = new MateriaPrimaSpinnerAdapter(getActivity(), R.layout.proveedor_spinner_fila, R.id.tvSpinnerFila, lMateriaPrimaAutocomplete);
+        //mpsa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnrNombreMateriaPrima.setAdapter(materiaPrimaSA);
 
+        //RecyclerView Materia Prima
         rvProductoMateriaPrima = (RecyclerView) view.findViewById(R.id.rvProductoMateriaPrima);
-
-        proveedorProductoMateriaPrimaRA = new ProveedorProductoMateriaPrimaRecyclerAdapter(getContext(), lProductoMateriaPrima, mListener);
+        ppmpRecyclerAdapter = new ProveedorProductoMateriaPrimaRecyclerAdapter(getContext(), lProductoMateriaPrima, mListener);
         rvProductoMateriaPrima.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rvProductoMateriaPrima.setAdapter(proveedorProductoMateriaPrimaRA);
+        rvProductoMateriaPrima.setAdapter(ppmpRecyclerAdapter);
 
-        spnrTarjetas = (Spinner) view.findViewById(R.id.spnrTarjetas);
-        spnrCuotas = (Spinner) view.findViewById(R.id.spnrCuotas);
+        //Evento de deslizar para Materia Prima Recicler View
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(rvProductoMateriaPrima);
 
-        //getCart();
+        //Spinner para Material Indirecto
+        populateLMaterialesIndirectosAutocomplete();
+        spnrMaterialesIndirectos = (Spinner) view.findViewById(R.id.spnrMaterialesIndirectos);
+        materialIndirectoSA = new MaterialIndirectoSpinnerAdapter(getActivity(), R.layout.proveedor_spinner_fila, R.id.tvSpinnerFila, lMaterialIndirectoAutocomplete);
+        //materialIndirectoSA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnrMaterialesIndirectos.setAdapter(materialIndirectoSA);
 
+        //RecyclerView Materia Prima
+        rvProductoMaterialesIndirectos = (RecyclerView) view.findViewById(R.id.rvProductoMaterialesIndirectos);
+        ppmiRecyclerAdapter = new ProveedorProductoMaterialesIndirectosRecyclerAdapter(getContext(), lProductoMaterialesIndirectos, mListener);
+        rvProductoMaterialesIndirectos.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvProductoMaterialesIndirectos.setAdapter(ppmiRecyclerAdapter);
 
+        //Evento de deslizar para Materia Prima Recicler View
+        ItemTouchHelper itemTouchHelper4MI = new ItemTouchHelper(simpleItemTouchCallback4FI);
+        itemTouchHelper4MI.attachToRecyclerView(rvProductoMaterialesIndirectos);
 
-        MateriaPrimaPojo m1 = new MateriaPrimaPojo();
-        m1.setNombreMateriaPrima("materia1");
-        m1.setValorMateriaPrima(0.003);
-        mp.add(m1);
-
-        MateriaPrimaPojo m2 = new MateriaPrimaPojo();
-        m2.setNombreMateriaPrima("materia2");
-        m2.setValorMateriaPrima(0.05);
-        mp.add(m2);
-
-        MateriaPrimaPojo m3 = new MateriaPrimaPojo();
-        m3.setNombreMateriaPrima("materia3");
-        m3.setValorMateriaPrima(0.08);
-        mp.add(m3);
-
-        spAdap = new SpinnerAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, mp);
-
-        //spnrTarjetaAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lTarjetas);
-        //spnrTarjetaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnrTarjetas.setAdapter(spAdap);
-
-        spnrTarjetas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                // Here you get the current item (a User object) that is selected by its position
-                MateriaPrimaPojo mp = spAdap.getItem(position);
-                // Here you can do the action you want to...
-                Toast.makeText(getActivity(), "ID: " + mp.getNombreMateriaPrima() + "\nName: " + mp.getValorMateriaPrima(),
-                        Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapter) {  }
-        });
-
-        MateriaPrimaPojo m4 = new MateriaPrimaPojo();
-        m3.setNombreMateriaPrima("materia3");
-        m3.setValorMateriaPrima(0.08);
-
-        seleccionarSpinner(m2);
-
-        /*spnrCuotasAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lCuotas);
-        spnrCuotasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnrCuotas.setAdapter(spnrCuotasAdapter);*/
 
         //Botones
         btnAgregarMateriaPrima = (Button) view.findViewById(R.id.btnAgregarMateriaPrima);
-        btnAgregarMateriaPrima = (Button) view.findViewById(R.id.btnAgregarMateriaPrima);
+        btnAgregarMaterialesIndirectos = (Button) view.findViewById(R.id.btnAgregarMaterialesIndirectos);
         btnGuardarProducto = (Button) view.findViewById(R.id.btnGuardarProducto);
+
         //Cajas de texto
         txtGastosFinancieros = (EditText) view.findViewById(R.id.txtGastosFinancieros);
         txtImgUrl = (EditText) view.findViewById(R.id.txtImgUrl);
         txtNombreProducto = (EditText) view.findViewById(R.id.txtNombreProducto);
+        txtValorMateriaPrima = (EditText) view.findViewById(R.id.txtValorMateriaPrima);
+        txtValorMaterialIndirecto = (EditText) view.findViewById(R.id.txtValorMaterialIndirecto);
 
-        btnAgregarMateriaPrima.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                MateriaPrimaPojo materiaPrimaItem = new MateriaPrimaPojo();
-                materiaPrimaItem.setNombreMateriaPrima("Nombre Materia Prima");
-                materiaPrimaItem.setValorMateriaPrima(0.00);
-                lProductoMateriaPrima.add(materiaPrimaItem);
-                proveedorProductoMateriaPrimaRA.notifyDataSetChanged();
-            }
-
-            /*if(spnrTarjetas.getSelectedItem() != null && spnrCuotas.getSelectedItem() != null){
-
-                tarjetaSeleccionada = spnrTarjetas.getSelectedItem().toString();
-                nroCuotasSeleccionado = Integer.parseInt(spnrCuotas.getSelectedItem().toString());
-
-                EfectivoTarjetaContent etc;
-
-                if(!TextUtils.isEmpty(tvEfectivo.getText())){
-                    Double efectivo = Double.parseDouble(tvEfectivo.getText().toString());
-                    Log.w("Monto Total", String.valueOf(montoTotal));
-                    Toast.makeText(getActivity(),tarjetaSeleccionada + " - " + nroCuotasSeleccionado + " - " + efectivo, Toast.LENGTH_LONG).show();
-                    etc = new EfectivoTarjetaContent(montoTotal, hmTarjetas, tarjetaSeleccionada, nroCuotasSeleccionado, efectivo);
-                }else{
-                    Log.w("Monto Total", String.valueOf(montoTotal));
-                    etc = new EfectivoTarjetaContent(montoTotal, hmTarjetas, tarjetaSeleccionada, nroCuotasSeleccionado, 0.00);
-                }
-
-                tvConsumos.setText(etc.getTvConsumos());
-                tvSubTotalConsumos.setText(etc.getTvSubTotalConsumos());
-                tvIVA.setText(etc.getTvIVA());
-                tvTotalConsumos.setText(etc.getTvTotalConsumos());
-                tvInteresFinanciamientoDiferido.setText(etc.getTvInteresFinanciamientoDiferido());
-                tvTotal.setText(etc.getTvTotal());
-                tvFactor.setText(etc.getTvFactor());
-                tvResumenCuotas.setText(etc.getTvResumenCuotas());
-                tvInteresMensual.setText(etc.getTvInteresMensual());
-
-            }else{
-                Toast.makeText(getActivity(),"Seleccione Tarjeta y Nro de Cuotas.", Toast.LENGTH_LONG).show();
-            }
-
-            }*/
-        });
-
+        //Eventos a botones
+        btnAgregarMateriaPrima.setOnClickListener(agregarMateriaPrima);
+        btnAgregarMaterialesIndirectos.setOnClickListener(agregarMaterialIndirecto);
         btnGuardarProducto.setOnClickListener(confirmarAgregarProducto);
+
+        /*spnrNombreMateriaPrima.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+
+                MateriaPrimaAutocomplete mpSeleccionada = mpsa.getItem(position);
+
+                Toast.makeText(getActivity(), "ID: " + mpSeleccionada.getNombreMateriaPrima() + "\nName: " + mpSeleccionada.getDescripcionMateriaPrima(),
+                        Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapter) {  }
+        });*/
 
         return view;
     }
 
-    private void  seleccionarSpinner(MateriaPrimaPojo objetoSeleccionado){
+
+    private void populateLMateriaPrimaAutocomplete() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef  = database.getReference();
+
+        final Query materiaPrima;
+
+        materiaPrima = myRef.child("materiaPrima");
+
+        materiaPrima.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                lMateriaPrimaAutocomplete.removeAll(lMateriaPrimaAutocomplete);
+
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    MateriaPrimaAutocomplete mP = new MateriaPrimaAutocomplete();
+                    mP.setNombreMateriaPrima(postSnapshot.getKey());
+                    mP.setDescripcionMateriaPrima(postSnapshot.getValue(String.class));
+                    lMateriaPrimaAutocomplete.add(mP);
+                }
+
+                if(materiaPrimaSA != null)
+                    materiaPrimaSA.notifyDataSetChanged(); //Esta línea me hizo perder 2 días.
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //count = 0;
+            }
+        });
+    }
+
+    private void populateLMaterialesIndirectosAutocomplete() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef  = database.getReference();
+
+        final Query materialesIndirectos;
+
+        materialesIndirectos = myRef.child("materialesIndirectos");
+
+        materialesIndirectos.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                lMaterialIndirectoAutocomplete.removeAll(lMaterialIndirectoAutocomplete);
+
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    MaterialIndirectoAutocomplete mP = new MaterialIndirectoAutocomplete();
+                    mP.setNombreMaterialIndirecto(postSnapshot.getKey());
+                    mP.setDescripcionMaterialIndirecto(postSnapshot.getValue(String.class));
+                    lMaterialIndirectoAutocomplete.add(mP);
+                }
+
+                if(materialIndirectoSA != null)
+                    materialIndirectoSA.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //count = 0;
+            }
+        });
+    }
+
+    /*private void  seleccionarSpinner(MateriaPrimaPojo objetoSeleccionado){
 
         double valorEntrante =  objetoSeleccionado.getValorMateriaPrima();
         int posicion = 0;
@@ -236,7 +252,125 @@ public class ProveedorAgregarProductoFragment extends Fragment {
         }
 
         spnrTarjetas.setSelection(posicion);
-    }
+    }*/
+
+    RadioGroup.OnCheckedChangeListener elegirTipoPrenda = new RadioGroup.OnCheckedChangeListener(){
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            switch(checkedId) {
+                case R.id.rbPolos:
+                    tvSeleccionTipoPrenda.setText("Has elegido: Polos" );
+                    break;
+                case R.id.rbPantalones:
+                    tvSeleccionTipoPrenda.setText("Has elegido: Pantalones" );
+                    break;
+                case R.id.rbZapatos:
+                    tvSeleccionTipoPrenda.setText("Has elegido: Zapatos" );
+                    break;
+            }
+        }
+    };
+
+    View.OnClickListener agregarMateriaPrima = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            MateriaPrimaPojo materiaPrimaItem = new MateriaPrimaPojo();
+
+            String nombreMP = "";
+
+            if(spnrNombreMateriaPrima.getSelectedItem() != null)
+                nombreMP = ((MateriaPrimaAutocomplete) spnrNombreMateriaPrima.getSelectedItem()).getNombreMateriaPrima();
+
+            Double valorMP = 0.0;
+            if(txtValorMateriaPrima.getText().toString() == ""){
+                valorMP = 0.0;
+            }else{
+                valorMP = Double.parseDouble(txtValorMateriaPrima.getText().toString());
+            }
+
+            materiaPrimaItem.setNombreMateriaPrima(nombreMP);
+            materiaPrimaItem.setValorMateriaPrima(valorMP);
+            lProductoMateriaPrima.add(materiaPrimaItem);
+            ppmpRecyclerAdapter.notifyDataSetChanged();
+
+            if(lProductoMateriaPrima.size() > 0){
+                rvProductoMateriaPrima.setVisibility(View.VISIBLE);
+            }
+
+            txtValorMateriaPrima.setText("0.0");
+
+
+            Toast.makeText(getActivity(),"Materia Prima agregada correctamente", Toast.LENGTH_LONG).show();
+
+        }
+    };
+
+    View.OnClickListener agregarMaterialIndirecto = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            MaterialesIndirectosPojo materialIndirectoItem = new MaterialesIndirectosPojo();
+
+            String nombreMI = "";
+
+            if(spnrMaterialesIndirectos.getSelectedItem() != null)
+                nombreMI = ((MateriaPrimaAutocomplete) spnrMaterialesIndirectos.getSelectedItem()).getNombreMateriaPrima();
+
+            Double valorMI = 0.0;
+            if(txtValorMaterialIndirecto.getText().toString() == ""){
+                valorMI = 0.0;
+            }else{
+                valorMI = Double.parseDouble(txtValorMaterialIndirecto.getText().toString());
+            }
+
+            materialIndirectoItem.setNombreMaterialIndirecto(nombreMI);
+            materialIndirectoItem.setValorMaterialIndirecto(valorMI);
+            lProductoMaterialesIndirectos.add(materialIndirectoItem);
+            ppmiRecyclerAdapter.notifyDataSetChanged();
+
+            if(lProductoMateriaPrima.size() > 0){
+                rvProductoMateriaPrima.setVisibility(View.VISIBLE);
+            }
+
+            txtValorMateriaPrima.setText("0.0");
+
+            Toast.makeText(getActivity(),"Materia Prima agregada correctamente", Toast.LENGTH_LONG).show();
+        }
+    };
+
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
+            int id = (int) viewHolder.getAdapterPosition();
+            lProductoMateriaPrima.remove(id);
+            ppmpRecyclerAdapter.notifyDataSetChanged();
+
+            Toast.makeText(viewHolder.itemView.getContext(), "Materia Prima eliminada correctamente", Toast.LENGTH_LONG).show();
+
+        }
+    };
+
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback4FI = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
+            int id = (int) viewHolder.getAdapterPosition();
+            lProductoMaterialesIndirectos.remove(id);
+            ppmiRecyclerAdapter.notifyDataSetChanged();
+
+            Toast.makeText(viewHolder.itemView.getContext(), "Material Indirecto eliminado correctamente", Toast.LENGTH_LONG).show();
+
+        }
+    };
 
     View.OnClickListener confirmarAgregarProducto = new View.OnClickListener() {
         @Override
@@ -299,87 +433,6 @@ public class ProveedorAgregarProductoFragment extends Fragment {
             Log.w(TAG , "Sin usuario activo");
             Toast.makeText(getContext(), "Necesitas iniciar sesión para guardar los datos.",
                     Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void getCart() {
-
-        final int[] count = new int[1];
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef  = database.getReference();
-
-        final Query tarjetas;
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null) {
-            tarjetas = myRef.child("tarjetas");
-        }else{
-            tarjetas = myRef.child("tarjetas");
-        }
-
-        tarjetas.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-
-                    HashMap<Integer, Double> cuotasPorcentajeInteres = (HashMap<Integer, Double>) postSnapshot.getValue();
-
-                    hmTarjetas.put(postSnapshot.getKey(), cuotasPorcentajeInteres);
-
-                    Log.w("Datos: ", postSnapshot.getKey());
-                    Log.w("Datos: ", postSnapshot.getValue().toString());
-                }
-                populateLTarjetas();
-                populateLCoutas();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //count = 0;
-            }
-        });
-    }
-
-    private void populateLTarjetas(){
-
-        Iterator<Map.Entry<String, HashMap<Integer, Double>>> iTarjetas = hmTarjetas.entrySet().iterator();
-        lTarjetas.removeAll(lTarjetas);
-
-        while (iTarjetas.hasNext()){
-            Map.Entry<String, HashMap<Integer,Double>> tarjeta = (Map.Entry) iTarjetas.next();
-            lTarjetas.add(tarjeta.getKey());
-            Log.w("Populate Tarjetas", tarjeta.getKey());
-        }
-        spnrTarjetaAdapter.notifyDataSetChanged();
-    }
-
-    private void populateLCoutas(){
-
-        HashMap<Integer, Double> hmCoutas = hmTarjetas.get("Diners");
-
-        Iterator<Map.Entry<Integer, Double>> iCuotas = hmCoutas.entrySet().iterator();
-        lCuotas.removeAll(lCuotas);
-
-        while (iCuotas.hasNext()){
-            Map.Entry<Integer,Double> cuota = (Map.Entry) iCuotas.next();
-            lCuotas.add(cuota.getKey());
-            Log.w("Populate Cuotas", String.valueOf(cuota.getKey()));
-        }
-        Collections.sort(lCuotas);
-        spnrCuotasAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnProveedorFragmentInteractionListener) {
-            mListener = (OnProveedorFragmentInteractionListener) context;
-            //this.montoTotal = mListener.getMonto();
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnProveedorFragmentInteractionListener");
         }
     }
 

@@ -83,9 +83,8 @@ public class ProveedorActivity extends AppCompatActivity
                 .setDrawerLayout(drawerLayout)
                 .build();
 
-
-        //navigationView.setNavigationItemSelectedListener(this);
-        //navigationView.setItemIconTintList(null);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
         //navigationView.setCheckedItem(R.id.nav_proveedor_inicio);
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_proveedor);
