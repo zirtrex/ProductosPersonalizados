@@ -1,10 +1,17 @@
 package net.zirtrex.productospersonalizados.Fragments;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,12 +25,16 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,6 +43,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import net.zirtrex.productospersonalizados.Activities.R;
 import net.zirtrex.productospersonalizados.Adapters.MateriaPrimaSpinnerAdapter;
@@ -49,6 +63,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ProveedorAgregarProductoFragment extends Fragment {
@@ -56,6 +74,10 @@ public class ProveedorAgregarProductoFragment extends Fragment {
     public static final String TAG = "AgregarProductoFragment";
 
     private OnProveedorFragmentInteractionListener mListener;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference productosDatabase;
+    private String proveedorID = ""; //ID del fabricante
 
     ArrayList<MateriaPrimaPojo> lProductoMateriaPrima = new ArrayList<>();
     ArrayList<MaterialesIndirectosPojo> lProductoMaterialesIndirectos = new ArrayList<>();
@@ -80,6 +102,9 @@ public class ProveedorAgregarProductoFragment extends Fragment {
     Button btnAgregarMateriaPrima, btnAgregarMaterialesIndirectos, btnGuardarProducto;
     EditText txtGastosFinancieros, txtImgUrl, txtNombreProducto, txtValorMateriaPrima, txtValorMaterialIndirecto;
     TextView tvSeleccionTipoPrenda;
+    ImageView ivPrenda;
+
+    private Uri resultUri;
 
     View view;
 
@@ -102,6 +127,9 @@ public class ProveedorAgregarProductoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.proveedor_fragment_agregar_producto, container, false);
+
+        mAuth = FirebaseAuth.getInstance();
+        proveedorID = mAuth.getCurrentUser().getUid();
 
         //Radio Group para tipo de prenda
         rgTipoPrenda = (RadioGroup) view.findViewById(R.id.rgTipoPrenda);
@@ -154,6 +182,18 @@ public class ProveedorAgregarProductoFragment extends Fragment {
         txtNombreProducto = (EditText) view.findViewById(R.id.txtNombreProducto);
         txtValorMateriaPrima = (EditText) view.findViewById(R.id.txtValorMateriaPrima);
         txtValorMaterialIndirecto = (EditText) view.findViewById(R.id.txtValorMaterialIndirecto);
+
+        //Imágenes
+        ivPrenda = (ImageView) view.findViewById(R.id.ivPrenda);
+
+        ivPrenda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+                startActivityForResult(intent, 1);
+            }
+        });
 
         //Eventos a botones
         btnAgregarMateriaPrima.setOnClickListener(agregarMateriaPrima);
@@ -296,7 +336,7 @@ public class ProveedorAgregarProductoFragment extends Fragment {
                 rvProductoMateriaPrima.setVisibility(View.VISIBLE);
             }
 
-            txtValorMateriaPrima.setText("0.0");
+            txtValorMateriaPrima.setText("");
 
 
             Toast.makeText(getActivity(),"Materia Prima agregada correctamente", Toast.LENGTH_LONG).show();
@@ -312,7 +352,7 @@ public class ProveedorAgregarProductoFragment extends Fragment {
             String nombreMI = "";
 
             if(spnrMaterialesIndirectos.getSelectedItem() != null)
-                nombreMI = ((MateriaPrimaAutocomplete) spnrMaterialesIndirectos.getSelectedItem()).getNombreMateriaPrima();
+                nombreMI = ((MaterialIndirectoAutocomplete) spnrMaterialesIndirectos.getSelectedItem()).getNombreMaterialIndirecto();
 
             Double valorMI = 0.0;
             if(txtValorMaterialIndirecto.getText().toString() == ""){
@@ -326,13 +366,13 @@ public class ProveedorAgregarProductoFragment extends Fragment {
             lProductoMaterialesIndirectos.add(materialIndirectoItem);
             ppmiRecyclerAdapter.notifyDataSetChanged();
 
-            if(lProductoMateriaPrima.size() > 0){
-                rvProductoMateriaPrima.setVisibility(View.VISIBLE);
+            if(lProductoMaterialesIndirectos.size() > 0){
+                rvProductoMaterialesIndirectos.setVisibility(View.VISIBLE);
             }
 
-            txtValorMateriaPrima.setText("0.0");
+            txtValorMaterialIndirecto.setText("");
 
-            Toast.makeText(getActivity(),"Materia Prima agregada correctamente", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),"Material Inderecto agregadao correctamente", Toast.LENGTH_LONG).show();
         }
     };
 
@@ -397,19 +437,22 @@ public class ProveedorAgregarProductoFragment extends Fragment {
         }
     };
 
+
     private void guardarProducto() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        DatabaseReference productosDatabase  = database.getReference("productos");
+        productosDatabase  = database.getReference("productos");
 
         Productos producto = new Productos();
 
         String idProducto = productosDatabase.push().getKey();
 
         producto.setIdProducto(idProducto);
+        producto.setTipo(tvSeleccionTipoPrenda.getText().toString());
         producto.setNombreProducto(txtNombreProducto.getText().toString());
-        producto.setImgUrl(txtImgUrl.getText().toString());
+        producto.setImgUrl(guardarImagenPrenda(idProducto));
+        producto.setGastosFinancieros(Double.parseDouble(txtGastosFinancieros.getText().toString()));
 
         Map<String, Double> materiasPrima = new HashMap<>();
 
@@ -420,12 +463,21 @@ public class ProveedorAgregarProductoFragment extends Fragment {
 
         producto.setMateriaPrima(materiasPrima);
 
+        Map<String, Double> materialesIndirectos = new HashMap<>();
+
+        for (int i = 0; i < lProductoMaterialesIndirectos.size(); i++){
+            MaterialesIndirectosPojo materialIndirectoActual = lProductoMaterialesIndirectos.get(i);
+            materialesIndirectos.put(materialIndirectoActual.getNombreMaterialIndirecto(), materialIndirectoActual.getValorMaterialIndirecto());
+        }
+
+        producto.setMaterialesIndirectos(materialesIndirectos);
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
             producto.setIdUsuario(user.getUid());
             productosDatabase.child(idProducto).setValue(producto);
             Log.w(TAG , "Usuario Logueado");
-            Toast.makeText(getContext(), "Producto agregado correctamente",
+            Toast.makeText(getContext(), "Prenda agregada correctamente",
                     Toast.LENGTH_LONG).show();
 
 
@@ -433,6 +485,63 @@ public class ProveedorAgregarProductoFragment extends Fragment {
             Log.w(TAG , "Sin usuario activo");
             Toast.makeText(getContext(), "Necesitas iniciar sesión para guardar los datos.",
                     Toast.LENGTH_LONG).show();
+        }
+    }
+
+    static String prendaImageUrl = "";
+    private String guardarImagenPrenda(final String idProducto){
+
+        if(resultUri != null) {
+            StorageReference filePath = FirebaseStorage.getInstance().getReference().child("prendas_images").child(proveedorID);
+            Bitmap bitmap = null;
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), resultUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = filePath.putBytes(data);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    prendaImageUrl = downloadUrl.toString();
+                    txtImgUrl.setText(prendaImageUrl);
+                    Map newImage = new HashMap();
+                    newImage.put("imgUrl", downloadUrl.toString());
+                    productosDatabase.child(idProducto).updateChildren(newImage);
+
+                    Toast.makeText(getContext(), "La imagen se ha guardado correctamente", Toast.LENGTH_LONG).show();
+                }
+            });
+
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), "La imagen no ha podido guardarse", Toast.LENGTH_LONG).show();
+                }
+            });
+        }else {
+            Toast.makeText(getContext(), "La imagen no ha sido guardado correctamente", Toast.LENGTH_LONG).show();
+        }
+
+        return prendaImageUrl;
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            final Uri imageUri = data.getData();
+            resultUri = imageUri;
+            ivPrenda.setImageURI(resultUri);
         }
     }
 

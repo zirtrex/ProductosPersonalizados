@@ -9,7 +9,12 @@ public class Productos{
     private String nombreProducto;
     private Double precio;
     private String imgUrl;
+    private String tipo;
+    private Double gastosFinancieros;
     private Map <String, Double> materiaPrima;
+    private Map <String, Double> materialesIndirectos;
+    private Map <String, Double> materialesIndirectosFabricacion;
+
 
 
     public Productos() {}
@@ -60,6 +65,22 @@ public class Productos{
         this.imgUrl = imgUrl;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public Double getGastosFinancieros() {
+        return gastosFinancieros;
+    }
+
+    public void setGastosFinancieros(Double gastosFinancieros) {
+        this.gastosFinancieros = gastosFinancieros;
+    }
+
     public Map <String, Double> getMateriaPrima() {
         return materiaPrima;
     }
@@ -68,15 +89,20 @@ public class Productos{
         this.materiaPrima = materiaPrima;
     }
 
-    @Override
-    public String toString() {
-        return "Productos{" +
-                "idProducto='" + idProducto + '\'' +
-                ", idUsuario='" + idUsuario + '\'' +
-                ", nombreProducto='" + nombreProducto + '\'' +
-                ", precio=" + precio +
-                ", imgUrl='" + imgUrl + '\'' +
-                ", materiaPrima=" + materiaPrima +
-                '}';
+    public Map<String, Double> getMaterialesIndirectos() {
+        return materialesIndirectos;
     }
+
+    public void setMaterialesIndirectos(Map<String, Double> materialesIndirectos) {
+        this.materialesIndirectos = materialesIndirectos;
+    }
+
+    public Map<String, Double> getMaterialesIndirectosFabricacion() {
+        return materialesIndirectosFabricacion;
+    }
+
+    public void setMaterialesIndirectosFabricacion(Map<String, Double> materialesIndirectosFabricacion) {
+        this.materialesIndirectosFabricacion = materialesIndirectosFabricacion;
+    }
+
 }
