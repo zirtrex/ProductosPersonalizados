@@ -56,13 +56,13 @@ public class PrecioVentaContent {
 
         double tizadoLargo = 0;
 
-        if(prendasALoAncho == 2) {
+        if(prendasALoAncho == 2.0) {
             if(pedidos > 2){
                 tizadoLargo = (int) (encajarLargo * (pedidos * 0.5));
             }else{
                 tizadoLargo = (int) (encajarLargo * (pedidos * 1));
             }
-        }else if(prendasALoAncho == 1){
+        }else if(prendasALoAncho == 1.0){
             tizadoLargo = (int) (encajarLargo * (pedidos * 1));
         }else if(prendasALoAncho == 0.5){
             tizadoLargo = (int) (encajarLargo * (pedidos * 2));
