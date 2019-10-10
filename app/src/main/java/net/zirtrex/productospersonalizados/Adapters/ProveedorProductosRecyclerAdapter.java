@@ -2,7 +2,8 @@ package net.zirtrex.productospersonalizados.Adapters;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentActivity;
+
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +14,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import net.zirtrex.productospersonalizados.Activities.R;
-import net.zirtrex.productospersonalizados.Fragments.ProveedorProductDetailFragment;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.Productos;
 
 import java.util.List;
 
 
-public class ProveedorProductsRecyclerAdapter extends RecyclerView.Adapter<ProveedorProductsRecyclerAdapter.ViewHolder> {
+public class ProveedorProductosRecyclerAdapter extends RecyclerView.Adapter<ProveedorProductosRecyclerAdapter.ViewHolder> {
 
     private final OnProveedorFragmentInteractionListener mListener;
 
@@ -28,14 +28,14 @@ public class ProveedorProductsRecyclerAdapter extends RecyclerView.Adapter<Prove
     private Context context;
 
 
-    public ProveedorProductsRecyclerAdapter(Context context, List<Productos> productos, OnProveedorFragmentInteractionListener listener){
+    public ProveedorProductosRecyclerAdapter(Context context, List<Productos> productos, OnProveedorFragmentInteractionListener listener){
         this.lProductos = productos;
         mListener = listener;
         this.context = context;
     }
 
     @Override
-    public ProveedorProductsRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ProveedorProductosRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
@@ -44,7 +44,7 @@ public class ProveedorProductsRecyclerAdapter extends RecyclerView.Adapter<Prove
     }
 
     @Override
-    public void onBindViewHolder(ProveedorProductsRecyclerAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(ProveedorProductosRecyclerAdapter.ViewHolder viewHolder, int position) {
 
         Productos producto = lProductos.get(position);
 
@@ -107,16 +107,9 @@ public class ProveedorProductsRecyclerAdapter extends RecyclerView.Adapter<Prove
 
                         // Creamos un nuevo Bundle para pasar el idProducto
                         Bundle args = new Bundle();
-                        // Colocamos el monto total
                         args.putString("idProducto", getItem(position).getIdProducto());
 
-                        ProveedorProductDetailFragment proveedorProductDetailFragment = new ProveedorProductDetailFragment();
-                        proveedorProductDetailFragment.setArguments(args);
-
-                        ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.nav_host_fragment_content_proveedor, proveedorProductDetailFragment,ProveedorProductDetailFragment.TAG)
-                                .addToBackStack(null)
-                                .commit();
+                        Navigation.findNavController(v).navigate(R.id.nav_proveedor_detalle_producto, args);
 
                         /*Snackbar.make( v, "Click detected on item " + position,
                                 Snackbar.LENGTH_LONG)

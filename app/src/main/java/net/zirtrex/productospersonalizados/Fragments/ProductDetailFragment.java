@@ -97,7 +97,7 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
             getActivity().setTitle(nombreProducto);
 
-            Glide.with(this)
+            Glide.with(getContext())
                     .load(imgUrl)
                     .centerCrop()
                     .placeholder(R.drawable.load)

@@ -11,11 +11,11 @@
         <item
             android:id="@+id/nav_proveedor_productos"
             android:icon="@drawable/polo_azul"
-            android:title="Productos" />
+            android:title="Mis Productos" />
         <item
             android:id="@+id/nav_proveedor_pedidos"
             android:icon="@drawable/pedidos"
-            android:title="Pedidos" />
+            android:title="Mis Pedidos" />
     </group>
 
 </menu>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="net.zirtrex.productospersonalizados.Fragments.ProveedorDetalleProductoFragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivCartImagenProducto"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerInside"
+            android:contentDescription="TODO" />
+
+        <TextView
+            android:id="@+id/tvNombreProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            tools:text="Nombre del Producto"
+            android:layout_margin="10dp" />
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:id="@+id/priceLinearLayout"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Precio"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="6"
+                    android:textSize="16sp"
+                    android:hint="Calculando precio"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvPrecio" />
+            </TableRow>
+
+        </TableLayout>
+
+        <Button
+            android:id="@+id/btnEditarProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:text="@string/editar_producto" />
+
+    </LinearLayout>
+
+</ScrollView>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.zirtrex.productospersonalizados.Fragments.ProveedorProductsFragment">
+    tools:context="net.zirtrex.productospersonalizados.Fragments.ProveedorProductosFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -22,7 +22,7 @@
 
         <TextView
             android:id="@+id/tvDescription"
-            android:text="Seleccione un producto para realizar una venta"
+            android:text="Seleccione un producto para visualizarlo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"

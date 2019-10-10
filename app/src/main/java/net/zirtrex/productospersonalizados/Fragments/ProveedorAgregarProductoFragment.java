@@ -1,6 +1,5 @@
 package net.zirtrex.productospersonalizados.Fragments;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,6 +12,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -129,7 +129,8 @@ public class ProveedorAgregarProductoFragment extends Fragment {
         view = inflater.inflate(R.layout.proveedor_fragment_agregar_producto, container, false);
 
         mAuth = FirebaseAuth.getInstance();
-        proveedorID = mAuth.getCurrentUser().getUid();
+        if(mAuth != null)
+            proveedorID = mAuth.getCurrentUser().getUid();
 
         //Radio Group para tipo de prenda
         rgTipoPrenda = (RadioGroup) view.findViewById(R.id.rgTipoPrenda);
@@ -338,7 +339,6 @@ public class ProveedorAgregarProductoFragment extends Fragment {
 
             txtValorMateriaPrima.setText("");
 
-
             Toast.makeText(getActivity(),"Materia Prima agregada correctamente", Toast.LENGTH_LONG).show();
 
         }
@@ -472,13 +472,14 @@ public class ProveedorAgregarProductoFragment extends Fragment {
 
         producto.setMaterialesIndirectos(materialesIndirectos);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
-            producto.setIdUsuario(user.getUid());
+        if(proveedorID != null){
+            producto.setIdUsuario(proveedorID);
             productosDatabase.child(idProducto).setValue(producto);
             Log.w(TAG , "Usuario Logueado");
             Toast.makeText(getContext(), "Prenda agregada correctamente",
                     Toast.LENGTH_LONG).show();
+
+            Navigation.findNavController(view).navigate(R.id.action_dp_to_p);
 
 
         }else {

@@ -3,22 +3,46 @@ package net.zirtrex.productospersonalizados.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import net.zirtrex.productospersonalizados.Activities.R;
+import net.zirtrex.productospersonalizados.Adapters.ProveedorProductosRecyclerAdapter;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
+import net.zirtrex.productospersonalizados.Models.Productos;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class ProveedorPedidosFragment extends Fragment {
 
+    public static final String TAG = "ProveedorPedidosFragment";
+
     private OnProveedorFragmentInteractionListener mListener;
 
+    private FirebaseAuth mAuth;
+    private DatabaseReference productosDatabase;
+    private String proveedorID; //ID del fabricante
+
+    RecyclerView rvProductos;
+    ProveedorProductosRecyclerAdapter recyclerAdapter;
+    List<Productos> productos = new LinkedList<Productos>();
+
     View view;
-    TextView tvMontoTotal;
-    Double montoTotal = 0.00;
 
     public ProveedorPedidosFragment() {
     }
@@ -33,24 +57,47 @@ public class ProveedorPedidosFragment extends Fragment {
 
         view = inflater.inflate(R.layout.proveedor_fragment_pedidos, container, false);
 
-        getActivity().setTitle(getText(R.string.title_fragment_financiamiento));
+        mAuth = FirebaseAuth.getInstance();
+        if(mAuth != null)
+            proveedorID = mAuth.getCurrentUser().getUid();
 
-        if(getArguments() != null) {
-            montoTotal = getArguments().getDouble("montoTotal");
-        }
+        rvProductos = (RecyclerView) view.findViewById(R.id.rvProductos);
+        recyclerAdapter = new ProveedorProductosRecyclerAdapter(getContext(), productos, mListener);
 
-        /*tvMontoTotal = (TextView) view.findViewById(R.id.tvMontoTotal);
-        String convertPrice = NumberFormat.getCurrencyInstance().format(montoTotal);
-        tvMontoTotal.setText("El monto de compra total es: " + convertPrice);
+        cargarPedidos();
 
-
-        //PrecioVentaContent ic = new PrecioVentaContent(montoTotal);
-
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rvFinanciamientos);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //recyclerView.setAdapter(new InversionAdapter(PrecioVentaContent.INVERSIONES, mListener));*/
+        rvProductos.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvProductos.setAdapter(new ProveedorProductosRecyclerAdapter(getContext(), productos, mListener));
 
         return view;
+    }
+
+    private void cargarPedidos(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        productosDatabase  = database.getReference("pedidos");
+        Query productosSearchQuery;
+
+        if(proveedorID != null){
+
+            productosSearchQuery = productosDatabase.orderByChild("idUsuario").equalTo(proveedorID);
+
+            productosSearchQuery.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    productos.removeAll(productos);
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren() ){
+                        Productos producto = snapshot.getValue(Productos.class);
+                        productos.add(producto);
+                    }
+                    recyclerAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
 

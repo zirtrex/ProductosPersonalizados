@@ -60,9 +60,9 @@
             android:orientation="vertical">
 
             <ImageButton
+                android:id="@+id/imgBtnVerProductos"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:id="@+id/imageButton4"
                 android:background="@drawable/polo_azul" />
 
             <TextView
@@ -78,9 +78,9 @@
             android:orientation="vertical">
 
             <ImageButton
+                android:id="@+id/imgBtnVerPedidos"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:id="@+id/imageButton3"
                 android:background="@drawable/pedidos" />
 
             <TextView

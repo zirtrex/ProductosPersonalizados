@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,7 @@ public class ProveedorPrincipalFragment extends Fragment {
 
     ProveedorActivity parentActivity;
 
-    ImageButton imgBtnAgregarProducto;
+    ImageButton imgBtnAgregarProducto, imgBtnVerProductos, imgBtnVerPedidos;
 
     private View view;
 
@@ -38,7 +40,7 @@ public class ProveedorPrincipalFragment extends Fragment {
             mListener = (OnProveedorFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " La actividad necesita implementar OnProveedorFragmentInteractionListener");
+                    + " La actividad debe implementar OnProveedorFragmentInteractionListener");
         }
     }
 
@@ -47,13 +49,20 @@ public class ProveedorPrincipalFragment extends Fragment {
 
         view = inflater.inflate(R.layout.proveedor_fragment_principal, container, false);
 
-        getActivity().setTitle(getText(R.string.title_proveedor_fragment_principal));
+        //getActivity().setTitle(getText(R.string.title_proveedor_fragment_principal));
 
         parentActivity = (ProveedorActivity) getActivity();
 
         if(view != null){
+            //Botones
             imgBtnAgregarProducto = (ImageButton) view.findViewById(R.id.imgBtnAgregarProducto);
+            imgBtnVerProductos = (ImageButton) view.findViewById(R.id.imgBtnVerProductos);
+            imgBtnVerPedidos = (ImageButton) view.findViewById(R.id.imgBtnVerPedidos);
+
+            //Acciones para los botones
             imgBtnAgregarProducto.setOnClickListener(agregarProducto);
+            imgBtnVerProductos.setOnClickListener(verProductos);
+            imgBtnVerPedidos.setOnClickListener(verPedidos);
         }
 
         return view;
@@ -62,10 +71,21 @@ public class ProveedorPrincipalFragment extends Fragment {
     View.OnClickListener agregarProducto = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_content_proveedor, new ProveedorAgregarProductoFragment(), ProveedorAgregarProductoFragment.TAG)
-                .addToBackStack(null)
-                .commit();
+            Navigation.findNavController(v).navigate(R.id.nav_proveedor_agregar_producto);
+        }
+    };
+
+    View.OnClickListener verProductos = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Navigation.findNavController(v).navigate(R.id.nav_proveedor_productos);
+        }
+    };
+
+    View.OnClickListener verPedidos = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Navigation.findNavController(v).navigate(R.id.nav_proveedor_pedidos);
         }
     };
 

@@ -25,7 +25,8 @@
     <string name="action_settings">Configuración</string>
 
     <string name="cantidad">Cantidad</string>
-    <string name="add_product">Agregar Producto</string>
+    <string name="agregar_producto">Agregar Producto</string>
+    <string name="editar_producto">Editar Producto</string>
     <string name="initial_quantity_value">1</string>
     <string name="total">Total</string>
 
