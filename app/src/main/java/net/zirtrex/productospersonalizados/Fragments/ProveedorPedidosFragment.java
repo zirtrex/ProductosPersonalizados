@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import net.zirtrex.productospersonalizados.Activities.R;
 import net.zirtrex.productospersonalizados.Adapters.ProveedorProductosRecyclerAdapter;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
-import net.zirtrex.productospersonalizados.Models.Productos;
+import net.zirtrex.productospersonalizados.Models.Producto;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -40,7 +39,7 @@ public class ProveedorPedidosFragment extends Fragment {
 
     RecyclerView rvProductos;
     ProveedorProductosRecyclerAdapter recyclerAdapter;
-    List<Productos> productos = new LinkedList<Productos>();
+    List<Producto> productos = new LinkedList<Producto>();
 
     View view;
 
@@ -86,7 +85,7 @@ public class ProveedorPedidosFragment extends Fragment {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     productos.removeAll(productos);
                     for(DataSnapshot snapshot : dataSnapshot.getChildren() ){
-                        Productos producto = snapshot.getValue(Productos.class);
+                        Producto producto = snapshot.getValue(Producto.class);
                         productos.add(producto);
                     }
                     recyclerAdapter.notifyDataSetChanged();

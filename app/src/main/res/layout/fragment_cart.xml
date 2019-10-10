@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.zirtrex.productospersonalizados.Activities.net.inlanet.cateoncook.Fragments.CartFragment">
+    tools:context="net.zirtrex.productospersonalizados.Fragments.CartFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

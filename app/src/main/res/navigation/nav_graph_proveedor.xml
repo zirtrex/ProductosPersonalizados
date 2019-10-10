@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_proveedor"
+    app:startDestination="@id/nav_proveedor_login">
+
+    <fragment
+        android:id="@+id/nav_proveedor_login"
+        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorLoginFragment"
+        android:label="Ingresar - Registrar"
+        tools:layout="@layout/proveedor_fragment_login" >
+        <action
+            android:id="@+id/action_nav_proveedor_login_to_nav_proveedor_inicio"
+            app:destination="@id/nav_proveedor_inicio" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_proveedor_inicio"
+        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorPrincipalFragment"
+        android:label="Inicio"
+        tools:layout="@layout/proveedor_fragment_principal" >
+        <action
+            android:id="@+id/action_nav_proveedor_inicio_to_nav_proveedor_productos"
+            app:destination="@id/nav_proveedor_productos"
+            app:popUpTo="@id/nav_proveedor_inicio" />
+        <action
+            android:id="@+id/action_nav_proveedor_inicio_to_nav_proveedor_pedidos"
+            app:destination="@id/nav_proveedor_pedidos"
+            app:popUpTo="@id/nav_proveedor_inicio" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_proveedor_productos"
+        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorProductosFragment"
+        android:label="Mis Productos"
+        tools:layout="@layout/proveedor_fragment_productos" />
+
+    <fragment
+        android:id="@+id/nav_proveedor_agregar_producto"
+        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorAgregarProductoFragment"
+        android:label="Agregar Producto"
+        tools:layout="@layout/proveedor_fragment_agregar_producto" >
+
+        <action android:id="@+id/action_dp_to_p"
+            app:destination="@id/nav_proveedor_productos"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/nav_proveedor_productos"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_proveedor_detalle_producto"
+        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorDetalleProductoFragment"
+        android:label="Mis Productos"
+        tools:layout="@layout/proveedor_fragment_detalle_producto" />
+
+    <fragment
+        android:id="@+id/nav_proveedor_pedidos"
+        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorPedidosFragment"
+        android:label="Mis Pedidos"
+        tools:layout="@layout/proveedor_fragment_pedidos" />
+
+
+</navigation>

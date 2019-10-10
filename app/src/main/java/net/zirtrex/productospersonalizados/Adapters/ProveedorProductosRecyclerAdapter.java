@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 
 import net.zirtrex.productospersonalizados.Activities.R;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
-import net.zirtrex.productospersonalizados.Models.Productos;
+import net.zirtrex.productospersonalizados.Models.Producto;
 
 import java.util.List;
 
@@ -24,11 +24,11 @@ public class ProveedorProductosRecyclerAdapter extends RecyclerView.Adapter<Prov
 
     private final OnProveedorFragmentInteractionListener mListener;
 
-    public List<Productos> lProductos;
+    public List<Producto> lProductos;
     private Context context;
 
 
-    public ProveedorProductosRecyclerAdapter(Context context, List<Productos> productos, OnProveedorFragmentInteractionListener listener){
+    public ProveedorProductosRecyclerAdapter(Context context, List<Producto> productos, OnProveedorFragmentInteractionListener listener){
         this.lProductos = productos;
         mListener = listener;
         this.context = context;
@@ -46,7 +46,7 @@ public class ProveedorProductosRecyclerAdapter extends RecyclerView.Adapter<Prov
     @Override
     public void onBindViewHolder(ProveedorProductosRecyclerAdapter.ViewHolder viewHolder, int position) {
 
-        Productos producto = lProductos.get(position);
+        Producto producto = lProductos.get(position);
 
         viewHolder.tvProductTitle.setText(producto.getNombreProducto());
 
@@ -71,7 +71,7 @@ public class ProveedorProductosRecyclerAdapter extends RecyclerView.Adapter<Prov
         return i;
     }
 
-    public Productos getItem(int position) {
+    public Producto getItem(int position) {
         if (position < 0 || position >= getItemCount()) {
             throw new IllegalArgumentException("Item position is out of adapter's range");
         }

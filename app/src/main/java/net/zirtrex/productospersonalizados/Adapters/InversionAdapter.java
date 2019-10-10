@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
-import net.zirtrex.productospersonalizados.Models.PrecioVentaContent.Inversiones;
+//import net.zirtrex.productospersonalizados.Models.PrecioVentaContent.Inversiones;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import net.zirtrex.productospersonalizados.Activities.R;
  * specified {@link OnFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class InversionAdapter extends RecyclerView.Adapter<InversionAdapter.ViewHolder> {
+/*public class InversionAdapter extends RecyclerView.Adapter<InversionAdapter.ViewHolder> {
 
     private final List<Inversiones> mValues;
     private final OnFragmentInteractionListener mListener;
@@ -80,3 +80,4 @@ public class InversionAdapter extends RecyclerView.Adapter<InversionAdapter.View
         }
     }
 }
+        */

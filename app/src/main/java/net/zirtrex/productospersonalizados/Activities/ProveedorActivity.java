@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
@@ -30,7 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import net.zirtrex.productospersonalizados.Fragments.LoginFragment;
 import net.zirtrex.productospersonalizados.Fragments.ProveedorPrincipalFragment;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.Usuarios;
@@ -83,11 +83,7 @@ public class ProveedorActivity extends AppCompatActivity
                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                 }
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment_content_proveedor, new LoginFragment(), LoginFragment.TAG)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .addToBackStack(null)
-                        .commit();
+                navController.navigate(R.id.nav_proveedor_login);
             }
         });
 
@@ -101,6 +97,7 @@ public class ProveedorActivity extends AppCompatActivity
                 btnLogin.setVisibility(View.VISIBLE);
                 btnLogout.setVisibility(View.GONE);
                 tvUserEmail.setVisibility(View.GONE);
+                navController.navigate(R.id.nav_proveedor_login);
             }
         });
 
@@ -139,11 +136,11 @@ public class ProveedorActivity extends AppCompatActivity
     }
 
     private void initScreen() {
-        proveedorPrincipalFragment = new ProveedorPrincipalFragment();
+        /*proveedorPrincipalFragment = new ProveedorPrincipalFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_content_proveedor, proveedorPrincipalFragment, ProveedorPrincipalFragment.TAG)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit();
+                .commit();*/
     }
 
     @Override
@@ -175,7 +172,6 @@ public class ProveedorActivity extends AppCompatActivity
                 if(user != null){
                     String user_id = user.getUid();
                     DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
-
                     current_user_db.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -183,9 +179,13 @@ public class ProveedorActivity extends AppCompatActivity
                             Log.w(TAG , usuario.toString());
                             if(usuario != null){
                                 if(usuario.getRol().equals("cliente")){
-                                    Log.w(TAG , "Cliente Logueado");
+                                    //Log.w(TAG , "Cliente Logueado");
+                                    Intent intent = new Intent(getApplicationContext(), ClienteActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                    finish();
                                 }else if(usuario.getRol().equals("proveedor")){
-                                    Log.w(TAG , "Proveedor Logueado");
+                                    //Log.w(TAG , "Proveedor Logueado");
                                     tvUserEmail.setText(usuario.getEmail());
                                     tvUserEmail.setVisibility(View.VISIBLE);
                                     btnLogin.setVisibility(View.GONE);
@@ -195,15 +195,12 @@ public class ProveedorActivity extends AppCompatActivity
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
+                        public void onCancelled(DatabaseError databaseError) {}
                     });
 
                 }else {
                     Log.w(TAG , "Sin usuario activo");
                     btnLogin.setVisibility(View.VISIBLE);
-                    navController.navigate(R.id.nav_proveedor_inicio);
                 }
             }
         };

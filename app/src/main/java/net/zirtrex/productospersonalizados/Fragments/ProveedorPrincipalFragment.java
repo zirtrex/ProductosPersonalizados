@@ -40,7 +40,7 @@ public class ProveedorPrincipalFragment extends Fragment {
             mListener = (OnProveedorFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " La actividad debe implementar OnProveedorFragmentInteractionListener");
+                    + " Se debe implementar OnProveedorFragmentInteractionListener");
         }
     }
 

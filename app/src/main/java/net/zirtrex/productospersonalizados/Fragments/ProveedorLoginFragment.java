@@ -80,6 +80,8 @@ public class ProveedorLoginFragment extends Fragment {
 
         getActivity().setTitle(getText(R.string.title_fragment_login));
 
+        getFirebaseAuthSession();
+
         spnrRol = (Spinner) view.findViewById(R.id.spnrRol);
 
         spnrRolAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, lRol);
@@ -130,8 +132,6 @@ public class ProveedorLoginFragment extends Fragment {
         mLoginFormView = view.findViewById(R.id.login_form);
         mProgressView = view.findViewById(R.id.login_progress);
 
-        getFirebaseAuthSession();
-
         return view;
     }
 
@@ -147,12 +147,13 @@ public class ProveedorLoginFragment extends Fragment {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Usuarios usuario = dataSnapshot.getValue(Usuarios.class);
+                            Log.w(TAG , usuario.toString());
                             if(usuario != null){
-                                if(usuario.getRol() == "cliente"){
+                                if(usuario.getRol().equals("cliente")){
                                     Log.w(TAG , "Cliente Logueado");
-                                }else if(usuario.getRol() == "proveedor"){
+                                }else if(usuario.getRol().equals("proveedor")){
                                     Log.w(TAG , "Proveedor Logueado");
-                                    Navigation.findNavController(view).navigate(R.id.nav_proveedor_inicio);
+                                    Navigation.findNavController(view).navigate(R.id.action_nav_proveedor_login_to_nav_proveedor_inicio);
                                 }
                             }
                         }
@@ -165,7 +166,7 @@ public class ProveedorLoginFragment extends Fragment {
 
                 }else {
                     Log.w(TAG , "Sin usuario activo");
-                    Navigation.findNavController(view).navigate(R.id.nav_proveedor_login);
+                    //Navigation.findNavController(view).navigate(R.id.nav_proveedor_login);
                 }
             }
         };

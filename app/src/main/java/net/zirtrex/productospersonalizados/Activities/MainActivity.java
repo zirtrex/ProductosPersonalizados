@@ -75,14 +75,14 @@ public class MainActivity extends AppCompatActivity {
                             if(usuario != null){
                                 if(usuario.getRol().equals("cliente")){
                                     Log.w(TAG , "Cliente Logueado");
-                                    Intent intent = new Intent(getApplicationContext(), ClienteActivity.class);
+                                    /*Intent intent = new Intent(getApplicationContext(), ClienteActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(intent);
+                                    startActivity(intent);*/
                                 }else if(usuario.getRol().equals("proveedor")){
                                     Log.w(TAG , "Proveedor Logueado");
-                                    Intent intent = new Intent(getApplicationContext(), ProveedorActivity.class);
+                                    /*Intent intent = new Intent(getApplicationContext(), ProveedorActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(intent);
+                                    startActivity(intent);*/
                                 }
                             }
                         }

@@ -13,6 +13,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -29,22 +34,32 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Fragments.CartFragment;
-import net.zirtrex.productospersonalizados.Fragments.ClienteProductsFragment;
-import net.zirtrex.productospersonalizados.Fragments.LoginFragment;
+import net.zirtrex.productospersonalizados.Fragments.ClienteLoginFragment;
+import net.zirtrex.productospersonalizados.Fragments.ClienteProductosFragment;
 import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.Cart;
+import net.zirtrex.productospersonalizados.Models.Usuarios;
 import net.zirtrex.productospersonalizados.Util.Utils;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class ClienteActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        OnFragmentInteractionListener {
+                                implements  OnFragmentInteractionListener {
 
     public static final String TAG ="ClienteActivity";
 
     FirebaseAuth.AuthStateListener mAuthListener;
+
+    Toolbar toolbar;
+    public DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    private AppBarConfiguration mAppBarConfiguration;
+    public NavController navController;
+
+    List<Cart> lCart = new LinkedList<>();
 
     TextView tvUserEmail;
     Button btnLogin, btnLogout;
@@ -52,27 +67,18 @@ public class ClienteActivity extends AppCompatActivity
     int mNotificationsCount = 0;
     Double montoTotal = 0.00;
 
-    List<Cart> lCart;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cliente);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setItemIconTintList(null);
+        setupNavigation();
 
         View header = navigationView.getHeaderView(0);
 
@@ -85,12 +91,10 @@ public class ClienteActivity extends AppCompatActivity
         btnLogin.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if (drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
-                getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_cliente, new LoginFragment(), LoginFragment.TAG)
-                    .commit();
+                navController.navigate(R.id.nav_cliente_login);
             }
         });
 
@@ -98,49 +102,56 @@ public class ClienteActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                if (drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
                 btnLogin.setVisibility(View.VISIBLE);
                 btnLogout.setVisibility(View.GONE);
                 tvUserEmail.setVisibility(View.GONE);
+                navController.navigate(R.id.nav_cliente_login);
             }
         });
-
-        if(Utils.validateScreen){
-
-            Fragment productsFragment = new ClienteProductsFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_cliente, productsFragment, ClienteProductsFragment.TAG)
-                    .addToBackStack(null)
-                    .commit();
-
-            Utils.validateScreen = false;
-        }
-
-        lCart = new LinkedList<Cart>();
 
         getCart();
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
+    private void setupNavigation() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar_cliente);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        drawerLayout = findViewById(R.id.drawer_layout_cliente);
+        navigationView =  findViewById(R.id.nav_view_cliente);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_cliente);
+
+        Set<Integer> topLevelDestinations = new HashSet<>();
+        topLevelDestinations.add(R.id.nav_cliente_login);
+        topLevelDestinations.add(R.id.nav_cliente_productos);
+
+        mAppBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations)
+                                                                .setDrawerLayout(drawerLayout)
+                                                                .build();
+
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+        navigationView.setItemIconTintList(null);
+        //navigationView.setCheckedItem(R.id.nav_proveedor_inicio);
     }
 
+
+
+
     @Override
-    protected void onStop() {
-        super.onStop();
-        if(mAuthListener != null){
-            FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
-        }
+    public boolean onSupportNavigateUp() {
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_cliente);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -170,12 +181,7 @@ public class ClienteActivity extends AppCompatActivity
         switch (item.getItemId()) {
 
             case R.id.action_notifications:
-
-                Fragment fCart = new CartFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_cliente, fCart,"Fragment Cart")
-                        .addToBackStack(null)
-                        .commit();
+                //TODO Navigation
 
                 return true;
 
@@ -187,61 +193,6 @@ public class ClienteActivity extends AppCompatActivity
 
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        Fragment miFragment = null;
-        String tag = "";
-        boolean fragmentSeleccionado = false;
-
-        if (id == R.id.nav_productos) {
-
-            miFragment = new ClienteProductsFragment();
-            tag = ClienteProductsFragment.TAG;
-            fragmentSeleccionado = true;
-
-        /*}else if (id == R.id.nav_financiamientos) {
-
-            miFragment = new ProveedorPedidosFragment();
-            fragmentSeleccionado = true;
-
-        }else if (id == R.id.nav_formas_de_pago) {
-
-            miFragment = new FormasPagoFragment();
-            fragmentSeleccionado = true;
-
-        }else if (id == R.id.nav_premios) {
-
-            miFragment = new FormasPagoFragment();
-            fragmentSeleccionado = true;
-
-        }else if (id == R.id.nav_repuestos) {
-
-            miFragment = new FormasPagoFragment();
-            fragmentSeleccionado = true;
-
-        }else if (id == R.id.nav_comisiones) {
-
-            miFragment = new FormasPagoFragment();
-            fragmentSeleccionado = true;*/
-
-        }
-
-        if (fragmentSeleccionado){
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_cliente, miFragment, tag)
-                    .addToBackStack(null)
-                    .commit();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     private void getFirebaseAuthSession(){
         mAuthListener = new FirebaseAuth.AuthStateListener(){
             @Override
@@ -249,21 +200,34 @@ public class ClienteActivity extends AppCompatActivity
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null){
                     String user_id = user.getUid();
-                    DatabaseReference current_user_db_proveedor = FirebaseDatabase.getInstance().getReference().child("users").child("proveedor").child(user_id);
-                    DatabaseReference current_user_db_cliente = FirebaseDatabase.getInstance().getReference().child("users").child("cliente").child(user_id);
+                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
+                    current_user_db.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Usuarios usuario = dataSnapshot.getValue(Usuarios.class);
+                            Log.w(TAG , usuario.toString());
+                            if(usuario != null){
+                                if(usuario.getRol().equals("cliente")){
+                                    //Log.w(TAG , "Cliente Logueado");
+                                    tvUserEmail.setText(usuario.getEmail());
+                                    tvUserEmail.setVisibility(View.VISIBLE);
+                                    btnLogin.setVisibility(View.GONE);
+                                    btnLogout.setVisibility(View.VISIBLE);
 
-                    if(current_user_db_cliente != null){
-                        Log.w(TAG , "Usuario Logueado");
-                        tvUserEmail.setText(user.getEmail());
-                        tvUserEmail.setVisibility(View.VISIBLE);
-                        btnLogin.setVisibility(View.GONE);
-                        btnLogout.setVisibility(View.VISIBLE);
-                    }else if(current_user_db_proveedor != null){
-                        Log.w(TAG , "Proveedor");
-                        Intent intent = new Intent(getApplicationContext(), ProveedorActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
+                                }else if(usuario.getRol().equals("proveedor")){
+                                    //Log.w(TAG , "Proveedor Logueado");
+                                    Intent intent = new Intent(getApplicationContext(), ProveedorActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) { }
+                    });
+
                 }else {
                     Log.w(TAG , "Sin usuario activo");
                     btnLogin.setVisibility(View.VISIBLE);
@@ -345,5 +309,14 @@ public class ClienteActivity extends AppCompatActivity
     @Override
     public Double getMonto() {
         return this.montoTotal;
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(mAuthListener != null){
+            FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
+        }
     }
 }

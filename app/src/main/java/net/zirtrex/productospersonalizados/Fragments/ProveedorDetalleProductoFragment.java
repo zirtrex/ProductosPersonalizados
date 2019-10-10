@@ -1,12 +1,10 @@
 package net.zirtrex.productospersonalizados.Fragments;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +14,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Activities.R;
 import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
-import net.zirtrex.productospersonalizados.Models.Productos;
+import net.zirtrex.productospersonalizados.Models.Producto;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 public class ProveedorDetalleProductoFragment extends Fragment implements View.OnClickListener{
 
@@ -74,7 +69,7 @@ public class ProveedorDetalleProductoFragment extends Fragment implements View.O
         productosDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Productos inProducto = dataSnapshot.getValue(Productos.class);
+                Producto inProducto = dataSnapshot.getValue(Producto.class);
                 actualizarVista(inProducto);
             }
 
@@ -85,7 +80,7 @@ public class ProveedorDetalleProductoFragment extends Fragment implements View.O
         });
     }
 
-    public void actualizarVista(Productos producto) {
+    public void actualizarVista(Producto producto) {
         if (producto != null && view != null) {
 
             getActivity().setTitle(producto.getNombreProducto());
