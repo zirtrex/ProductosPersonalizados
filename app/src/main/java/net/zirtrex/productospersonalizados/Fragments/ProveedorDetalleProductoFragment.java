@@ -75,9 +75,7 @@ public class ProveedorDetalleProductoFragment extends Fragment implements View.O
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
