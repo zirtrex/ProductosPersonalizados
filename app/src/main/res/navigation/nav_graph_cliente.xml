@@ -24,36 +24,27 @@
     <fragment
         android:id="@+id/nav_cliente_detalle_producto"
         android:name="net.zirtrex.productospersonalizados.Fragments.ClienteDetalleProductoFragment"
-        android:label="Mis Productos"
+        android:label="Productos"
         tools:layout="@layout/cliente_fragment_detalle_producto" />
 
-    <!--<fragment
-        android:id="@+id/nav_proveedor_agregar_producto"
-        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorAgregarProductoFragment"
-        android:label="Agregar Producto"
-        tools:layout="@layout/proveedor_fragment_agregar_producto" >
-
-        <action android:id="@+id/action_dp_to_p"
-            app:destination="@id/nav_proveedor_productos"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/nav_proveedor_productos"
-            app:popUpToInclusive="true"/>
+    <fragment
+        android:id="@+id/nav_cliente_pedidos"
+        android:name="net.zirtrex.productospersonalizados.Fragments.ClientePedidosFragment"
+        android:label="Mis Pedidos"
+        tools:layout="@layout/cliente_fragment_pedidos" >
     </fragment>
 
-    <fragment
-        android:id="@+id/nav_proveedor_detalle_producto"
-        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorDetalleProductoFragment"
-        android:label="Mis Producto"
-        tools:layout="@layout/proveedor_fragment_detalle_producto" />
+    <!--<fragment
+         android:id="@+id/nav_proveedor_detalle_producto"
+         android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorDetalleProductoFragment"
+         android:label="Mis Producto"
+         tools:layout="@layout/proveedor_fragment_detalle_producto" />
 
-    <fragment
-        android:id="@+id/nav_proveedor_pedidos"
-        android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorPedidosFragment"
-        android:label="Mis Pedidos"
-        tools:layout="@layout/proveedor_fragment_pedidos" />-->
+     <fragment
+         android:id="@+id/nav_proveedor_pedidos"
+         android:name="net.zirtrex.productospersonalizados.Fragments.ProveedorPedidosFragment"
+         android:label="Mis Pedidos"
+         tools:layout="@layout/proveedor_fragment_pedidos" />-->
 
 
 </navigation>

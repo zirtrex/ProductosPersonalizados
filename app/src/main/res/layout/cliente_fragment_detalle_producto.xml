@@ -63,54 +63,18 @@
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Alto (cm)"/>
+                    android:text="Largo (cm)"/>
 
                 <EditText
-                    android:id="@+id/txtAlto"
+                    android:id="@+id/txtLargo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     android:textSize="16sp"
-                    android:hint="Ingrese el alto de la prenda"
+                    android:hint="Ingrese el largo de la prenda"
                     android:gravity="right"
                     android:inputType="numberDecimal"/>
 
-            </TableRow>
-
-        </TableLayout>
-
-        <Button
-            android:id="@+id/btnCalcularPrecio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Calcular Precio"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/activity_horizontal_margin">
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Precio"/>
-
-                <TextView
-                    android:id="@+id/tvPrecio"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:textSize="16sp"
-                    android:hint="Será calculado"
-                    android:gravity="center" />
             </TableRow>
 
         </TableLayout>
@@ -168,6 +132,42 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btnCalcularPrecio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Calcular Precio"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Precio"/>
+
+                <TextView
+                    android:id="@+id/tvPrecio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:textSize="16sp"
+                    android:hint="Será calculado"
+                    android:gravity="center" />
+            </TableRow>
+
+        </TableLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

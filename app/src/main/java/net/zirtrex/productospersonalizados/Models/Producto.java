@@ -15,14 +15,11 @@ public class Producto {
     private Map <String, Double> materialesIndirectos;
     private Map <String, Double> materialesIndirectosFabricacion;
 
-
-
     public Producto() {}
 
     public Producto(String nombreProducto, Map <String, Double> materiaPrima) {
         this.nombreProducto = nombreProducto;
         this.materiaPrima = materiaPrima;
-
     }
 
     public String getIdProducto() {

@@ -4,13 +4,12 @@ import android.content.Intent;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.View;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
@@ -33,11 +32,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import net.zirtrex.productospersonalizados.Fragments.CartFragment;
-import net.zirtrex.productospersonalizados.Fragments.ClienteLoginFragment;
-import net.zirtrex.productospersonalizados.Fragments.ClienteProductosFragment;
 import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
 import net.zirtrex.productospersonalizados.Models.Cart;
+import net.zirtrex.productospersonalizados.Models.Pedidos;
 import net.zirtrex.productospersonalizados.Models.Usuarios;
 import net.zirtrex.productospersonalizados.Util.Utils;
 
@@ -52,6 +49,8 @@ public class ClienteActivity extends AppCompatActivity
     public static final String TAG ="ClienteActivity";
 
     FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseAuth mAuth;
+    private String clienteID; //ID del cliente
 
     Toolbar toolbar;
     public DrawerLayout drawerLayout;
@@ -59,7 +58,7 @@ public class ClienteActivity extends AppCompatActivity
     private AppBarConfiguration mAppBarConfiguration;
     public NavController navController;
 
-    List<Cart> lCart = new LinkedList<>();
+    List<Pedidos> lPedidos = new LinkedList<>();
 
     TextView tvUserEmail;
     Button btnLogin, btnLogout;
@@ -77,6 +76,10 @@ public class ClienteActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cliente);
+
+        mAuth = FirebaseAuth.getInstance();
+        if(mAuth != null)
+            clienteID = mAuth.getCurrentUser().getUid();
 
         setupNavigation();
 
@@ -112,7 +115,7 @@ public class ClienteActivity extends AppCompatActivity
             }
         });
 
-        getCart();
+        obtenerPedidos();
 
     }
 
@@ -141,9 +144,6 @@ public class ClienteActivity extends AppCompatActivity
         //navigationView.setCheckedItem(R.id.nav_proveedor_inicio);
     }
 
-
-
-
     @Override
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
@@ -161,11 +161,8 @@ public class ClienteActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
-        // Get the notifications MenuItem and
-        // its LayerDrawable (layer-list)
         MenuItem item = menu.findItem(R.id.action_notifications);
         LayerDrawable icon = (LayerDrawable) item.getIcon();
 
@@ -181,8 +178,7 @@ public class ClienteActivity extends AppCompatActivity
         switch (item.getItemId()) {
 
             case R.id.action_notifications:
-                //TODO Navigation
-
+                //navController.navigate(R.id.nav_cliente_pedidos);
                 return true;
 
             case R.id.action_settings:
@@ -236,59 +232,48 @@ public class ClienteActivity extends AppCompatActivity
         };
     }
 
-    private void getCart() {
+    private void obtenerPedidos() {
 
         final int[] count = new int[1];
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef  = database.getReference();
+        if(clienteID != null) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference pedidosDatabase = database.getReference("pedidos");
+            Query pedidosSearchQuery;
 
-        Query carts;
+            pedidosSearchQuery = pedidosDatabase.orderByChild("idCliente").equalTo(clienteID);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null) {
-            carts = myRef.child("cart").child(user.getUid());
-        }else{
-            carts = myRef.child("cart");
-        }
+            pedidosSearchQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    count[0] = (int) dataSnapshot.getChildrenCount();
+                    updateNotificationsBadge(count[0]);
 
-        carts.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                count[0] = (int) dataSnapshot.getChildrenCount();
-                updateNotificationsBadge(count[0]);
-
-                lCart.clear();
-
-                for(DataSnapshot snapshot : dataSnapshot.getChildren() ){
-                    Cart cart = snapshot.getValue(Cart.class);
-                    lCart.add(cart);
+                    lPedidos.clear();
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren() ){
+                        Pedidos pedido = snapshot.getValue(Pedidos.class);
+                        lPedidos.add(pedido);
+                    }
+                    calculateTotal(lPedidos);
+                    //Log.w("Datos:", Long.toString(dataSnapshot.getChildrenCount()));
                 }
-                calculateTotal(lCart);
-                //Log.w("Datos:", Long.toString(dataSnapshot.getChildrenCount()));
 
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //count = 0;
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    //count = 0;
+                }
+            });
+        }
     }
 
-    public double calculateTotal(List<Cart> lcart){
-
+    public double calculateTotal(List<Pedidos> lPedidos){
         montoTotal = 0.00;
 
-        for (int i = 0; i < lcart.size(); i++)
+        for (int i = 0; i < lPedidos.size(); i++)
         {
-            Double price = lcart.get(i).getCartPrecioTotal();
-
+            Double price = lPedidos.get(i).getTotal();
             montoTotal += price;
-
         }
-
         return montoTotal;
     }
 
@@ -301,7 +286,6 @@ public class ClienteActivity extends AppCompatActivity
     @Override
     public void updateNotificationsBadge(Integer count) {
         mNotificationsCount = count;
-
         //Forzamos la destrucción del menu
         invalidateOptionsMenu();
     }
@@ -310,7 +294,6 @@ public class ClienteActivity extends AppCompatActivity
     public Double getMonto() {
         return this.montoTotal;
     }
-
 
     @Override
     protected void onStop() {

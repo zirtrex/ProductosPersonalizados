@@ -4,25 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.zirtrex.productospersonalizados.Fragments.CartFragment">
+    tools:context="net.zirtrex.productospersonalizados.Fragments.ClientePedidosFragment">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCart"
+            android:id="@+id/rvPedidos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
-            android:scrollbars="vertical" />
-
+            android:scrollbars="vertical"
+            tools:listitem="@layout/pedidos_item"
+            tools:itemCount="2" />
 
         <TableLayout
             android:layout_width="match_parent"
             android:id="@+id/priceLayout"
-            android:layout_below="@+id/rvCart"
             android:padding="@dimen/activity_horizontal_margin"
             android:layout_height="wrap_content">
 
@@ -39,30 +39,16 @@
                     android:text="Precio Total"/>
 
                 <TextView
+                    android:id="@+id/tvPrecioTotal"
                     android:layout_width="100dp"
                     android:layout_weight="6"
                     android:textSize="24sp"
                     android:hint="Precio Total"
                     android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tvCartPrecioTotal" />
+                    android:layout_height="wrap_content" />
             </TableRow>
 
         </TableLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/priceLayout">
-
-            <Button
-                android:id="@+id/btnFinanciamiento"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Comprar" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

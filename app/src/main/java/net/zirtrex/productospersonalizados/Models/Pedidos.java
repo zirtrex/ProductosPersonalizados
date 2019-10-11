@@ -4,12 +4,14 @@ package net.zirtrex.productospersonalizados.Models;
 public class Pedidos {
 
     private String idPedido;
-    private String idUsuario; //Usuario que hace el pedido
+    private String idCliente; //Usuario que hace el pedido
     private String idProveedor; //Fabricante que va el pedido
     private String idProducto; //Producto seleccionado
     private String nombreProducto;
     private Double precio;
     private String imgUrl;
+    private Double anchoPrenda;
+    private Double largoPrenda;
     private int cantidad;
     private Double total;
 
@@ -27,12 +29,12 @@ public class Pedidos {
         this.idPedido = idPedido;
     }
 
-    public String getIdUsuario() {
-        return idUsuario;
+    public String getIdCliente() {
+        return idCliente;
     }
 
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setIdCliente(String idCliente) {
+        this.idCliente = idCliente;
     }
 
     public String getIdProveedor() {
@@ -77,6 +79,22 @@ public class Pedidos {
 
     public int getCantidad() {
         return cantidad;
+    }
+
+    public Double getAnchoPrenda() {
+        return anchoPrenda;
+    }
+
+    public void setAnchoPrenda(Double anchoPrenda) {
+        this.anchoPrenda = anchoPrenda;
+    }
+
+    public Double getLargoPrenda() {
+        return largoPrenda;
+    }
+
+    public void setLargoPrenda(Double largoPrenda) {
+        this.largoPrenda = largoPrenda;
     }
 
     public void setCantidad(int cantidad) {

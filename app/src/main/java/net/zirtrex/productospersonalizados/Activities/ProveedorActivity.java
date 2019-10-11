@@ -51,8 +51,6 @@ public class ProveedorActivity extends AppCompatActivity
     private AppBarConfiguration mAppBarConfiguration;
     public NavController navController;
 
-    Fragment proveedorPrincipalFragment;
-
     TextView tvUserEmail;
     Button btnLogin, btnLogout;
 

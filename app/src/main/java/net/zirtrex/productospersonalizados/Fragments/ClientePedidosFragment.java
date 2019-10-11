@@ -1,17 +1,21 @@
 package net.zirtrex.productospersonalizados.Fragments;
 
 import android.content.Context;
-import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.recyclerview.widget.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,26 +25,25 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.zirtrex.productospersonalizados.Activities.R;
 import net.zirtrex.productospersonalizados.Adapters.PedidosAdapter;
-import net.zirtrex.productospersonalizados.Adapters.ProveedorProductosRecyclerAdapter;
-import net.zirtrex.productospersonalizados.Interfaces.OnProveedorFragmentInteractionListener;
+import net.zirtrex.productospersonalizados.Interfaces.OnFragmentInteractionListener;
+import net.zirtrex.productospersonalizados.Models.Cart;
 import net.zirtrex.productospersonalizados.Models.Pedidos;
-import net.zirtrex.productospersonalizados.Models.Producto;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+public class ClientePedidosFragment extends Fragment{
 
-public class ProveedorPedidosFragment extends Fragment {
+    public static final String TAG = "ClientePedidosFragment";
 
-    public static final String TAG = "ProveedorPedidosFragment";
-
-    private OnProveedorFragmentInteractionListener mListener;
+    OnFragmentInteractionListener mListener;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference productosDatabase;
-    private String proveedorID; //ID del fabricante
+    private DatabaseReference pedidosDatabase;
+    private String clienteID; //ID del cliente
 
     List<Pedidos> lPedidos = new ArrayList<>();
 
@@ -49,10 +52,11 @@ public class ProveedorPedidosFragment extends Fragment {
 
     Double precioTotal = 0.00;
 
+    TextView tvPrecioTotal;
+
     View view;
 
-    public ProveedorPedidosFragment() {
-    }
+    public ClientePedidosFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,12 +66,12 @@ public class ProveedorPedidosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.proveedor_fragment_pedidos, container, false);
+        view = inflater.inflate(R.layout.cliente_fragment_pedidos, container, false);
 
         mAuth = FirebaseAuth.getInstance();
 
         if(mAuth != null){
-            proveedorID = mAuth.getCurrentUser().getUid();
+            clienteID = mAuth.getCurrentUser().getUid();
 
             obtenerPedidos();
 
@@ -76,20 +80,49 @@ public class ProveedorPedidosFragment extends Fragment {
 
             pedidosAdapter = new PedidosAdapter(getContext(), lPedidos);
             rvPedidos.setAdapter(pedidosAdapter);
+
+            itemTouchHelper.attachToRecyclerView(rvPedidos);
         }
 
         return view;
+
     }
+
+    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
+            int position = viewHolder.getAdapterPosition();
+            Pedidos pedido = lPedidos.get(position);
+            String idPedido = pedido.getIdPedido();
+
+            if(mAuth != null){
+                DatabaseReference pedidosDatabase = FirebaseDatabase.getInstance().getReference("pedidos").child(idPedido);
+                pedidosDatabase.removeValue();
+                lPedidos.remove(position);
+                pedidosAdapter.notifyDataSetChanged();
+                calculateTotal(lPedidos);
+                Toast.makeText(viewHolder.itemView.getContext(), "Pedido eliminado correctamente",
+                        Toast.LENGTH_LONG).show();
+
+            }
+        }
+    });
 
     private void obtenerPedidos() {
         final int[] count = new int[1];
 
-        if(proveedorID != null) {
+        if(clienteID != null) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference pedidosDatabase = database.getReference("pedidos");
             Query pedidosSearchQuery;
 
-            pedidosSearchQuery = pedidosDatabase.orderByChild("idProveedor").equalTo(proveedorID);
+            pedidosSearchQuery = pedidosDatabase.orderByChild("idCliente").equalTo(clienteID);
 
             pedidosSearchQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -131,24 +164,38 @@ public class ProveedorPedidosFragment extends Fragment {
         String convertPrice = precision.format(this.precioTotal);
         tvPrecioTotal.setText(convertPrice);
 
+        if (null != mListener) {
+            mListener.saveMonto(this.precioTotal);
+            mListener.updateNotificationsBadge(lPedidos.size());
+        }
+
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        //getCart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnProveedorFragmentInteractionListener) {
-            mListener = (OnProveedorFragmentInteractionListener) context;
-            //this.montoTotal = mListener.getMonto();
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + "Se debe implementar OnProveedorFragmentInteractionListener");
+                    + "Se debe implementar OnFragmentInteractionListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
 }

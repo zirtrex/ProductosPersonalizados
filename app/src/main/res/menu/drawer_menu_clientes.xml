@@ -6,11 +6,11 @@
             android:id="@+id/nav_cliente_productos"
             android:icon="@drawable/checklist"
             android:title="Inicio" />
-        <!--<item
-            android:id="@+id/nav_financiamientos"
-            android:icon="@drawable/money"
-            android:title="Financiamientos" />
         <item
+            android:id="@+id/nav_cliente_pedidos"
+            android:icon="@drawable/money"
+            android:title="Mis Pedidos" />
+        <!--<item
             android:id="@+id/nav_formas_de_pago"
             android:icon="@drawable/credit_card"
             android:title="Formas de Pago" />
