@@ -43,7 +43,6 @@ public class ClienteDetalleProductoFragment extends Fragment implements View.OnC
 
     private OnFragmentInteractionListener mListener;
 
-    private FirebaseAuth mAuth;
     private DatabaseReference productosDatabase;
     private String clienteID; //ID del cliente
     private String idProducto;
@@ -91,9 +90,9 @@ public class ClienteDetalleProductoFragment extends Fragment implements View.OnC
 
         view = inflater.inflate(R.layout.cliente_fragment_detalle_producto, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-        if(mAuth != null)
-            clienteID = mAuth.getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null)
+            clienteID = user.getUid();
 
         if (getArguments() != null) {
             idProducto = getArguments().getString("idProducto");

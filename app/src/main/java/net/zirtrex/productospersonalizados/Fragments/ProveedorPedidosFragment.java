@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -64,10 +65,9 @@ public class ProveedorPedidosFragment extends Fragment {
 
         view = inflater.inflate(R.layout.proveedor_fragment_pedidos, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-
-        if(mAuth != null){
-            proveedorID = mAuth.getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            proveedorID = user.getUid();
 
             obtenerPedidos();
 
@@ -91,7 +91,7 @@ public class ProveedorPedidosFragment extends Fragment {
 
             pedidosSearchQuery = pedidosDatabase.orderByChild("idProveedor").equalTo(proveedorID);
 
-            pedidosSearchQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            pedidosSearchQuery.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     lPedidos.removeAll(lPedidos);

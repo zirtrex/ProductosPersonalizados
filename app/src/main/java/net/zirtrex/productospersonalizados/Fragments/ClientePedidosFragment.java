@@ -41,7 +41,6 @@ public class ClientePedidosFragment extends Fragment{
 
     OnFragmentInteractionListener mListener;
 
-    private FirebaseAuth mAuth;
     private DatabaseReference pedidosDatabase;
     private String clienteID; //ID del cliente
 
@@ -68,10 +67,9 @@ public class ClientePedidosFragment extends Fragment{
 
         view = inflater.inflate(R.layout.cliente_fragment_pedidos, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-
-        if(mAuth != null){
-            clienteID = mAuth.getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            clienteID = user.getUid();
 
             obtenerPedidos();
 
@@ -101,7 +99,8 @@ public class ClientePedidosFragment extends Fragment{
             Pedidos pedido = lPedidos.get(position);
             String idPedido = pedido.getIdPedido();
 
-            if(mAuth != null){
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if(user != null){
                 DatabaseReference pedidosDatabase = FirebaseDatabase.getInstance().getReference("pedidos").child(idPedido);
                 pedidosDatabase.removeValue();
                 lPedidos.remove(position);
@@ -124,7 +123,7 @@ public class ClientePedidosFragment extends Fragment{
 
             pedidosSearchQuery = pedidosDatabase.orderByChild("idCliente").equalTo(clienteID);
 
-            pedidosSearchQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            pedidosSearchQuery.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     lPedidos.removeAll(lPedidos);

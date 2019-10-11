@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -147,9 +148,10 @@ public class ClienteLoginFragment extends Fragment {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Usuarios usuario = dataSnapshot.getValue(Usuarios.class);
                             if(usuario != null){
-                                if(usuario.getRol() == "cliente"){
+                                if(usuario.getRol().equals("cliente")){
                                     Log.w(TAG , "Cliente Logueado");
-                                }else if(usuario.getRol() == "proveedor"){
+                                    Navigation.findNavController(view).navigate(R.id.nav_cliente_productos);
+                                }else if(usuario.getRol().equals("proveedor")){
                                     Log.w(TAG , "Proveedor Logueado");
                                     //NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_proveedor);
                                     //navController.navigate(R.id.proveedorPrincipalFragment);
@@ -279,12 +281,9 @@ public class ClienteLoginFragment extends Fragment {
                     Activity activity = getActivity();
 
                     if(activity instanceof ProveedorActivity){
-                        Log.w(TAG, "Es proveedor activity");
-                        //NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_proveedor);
-                        //navController.navigate(R.id.proveedorPrincipalFragment);
+
                     }else if(activity instanceof ClienteActivity){
-                        //NavController navController = Navigation.findNavController(getActivity(), R.id.content_cliente);
-                        //navController.navigate(R.id.);
+                        Log.w(TAG, "Es cliente activity");
                     }
 
                 }else{

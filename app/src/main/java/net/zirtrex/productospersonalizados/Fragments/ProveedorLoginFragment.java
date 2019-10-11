@@ -78,8 +78,6 @@ public class ProveedorLoginFragment extends Fragment {
 
         view = inflater.inflate(R.layout.proveedor_fragment_login, container, false);
 
-        getActivity().setTitle(getText(R.string.title_fragment_login));
-
         getFirebaseAuthSession();
 
         spnrRol = (Spinner) view.findViewById(R.id.spnrRol);

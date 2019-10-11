@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -122,9 +123,9 @@ public class ProveedorAgregarProductoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.proveedor_fragment_agregar_producto, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-        if(mAuth != null)
-            proveedorID = mAuth.getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null)
+            proveedorID = user.getUid();
 
         //Radio Group para tipo de prenda
         rgTipoPrenda = (RadioGroup) view.findViewById(R.id.rgTipoPrenda);

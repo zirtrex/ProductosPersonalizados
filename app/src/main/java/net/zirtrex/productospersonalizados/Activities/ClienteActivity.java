@@ -49,7 +49,6 @@ public class ClienteActivity extends AppCompatActivity
     public static final String TAG ="ClienteActivity";
 
     FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseAuth mAuth;
     private String clienteID; //ID del cliente
 
     Toolbar toolbar;
@@ -77,9 +76,9 @@ public class ClienteActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cliente);
 
-        mAuth = FirebaseAuth.getInstance();
-        if(mAuth != null)
-            clienteID = mAuth.getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null)
+            clienteID = user.getUid();
 
         setupNavigation();
 

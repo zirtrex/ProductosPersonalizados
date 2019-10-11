@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,9 +56,9 @@ public class ClienteProductosFragment extends Fragment {
 
         view = inflater.inflate(R.layout.cliente_fragment_productos, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-        if(mAuth != null)
-            clienteID = mAuth.getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null)
+            clienteID = user.getUid();
 
         rvProductos = (RecyclerView) view.findViewById(R.id.rvProductos);
 
