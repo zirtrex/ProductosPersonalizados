@@ -301,7 +301,9 @@ public class ClienteDetalleProductoFragment extends Fragment implements View.OnC
         precio = Double.parseDouble(String.valueOf(costoUnitario));
 
         displayPrecio(precio);
-
+        displayQuantity(mQuantity);
+        mTotalPrice = mQuantity * precio;
+        displayCost(mTotalPrice);
     }
 
     public void increment(){

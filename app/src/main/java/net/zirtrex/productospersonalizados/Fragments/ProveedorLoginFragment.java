@@ -260,7 +260,7 @@ public class ProveedorLoginFragment extends Fragment {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "cuenta creada con email: failure", task.getException());
                     String msg = "Registro fallido [" + task.getException().getMessage() + "]";
-                    Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
                 }
                 showProgress(false);
                 }
@@ -288,7 +288,7 @@ public class ProveedorLoginFragment extends Fragment {
                 }else{
                     Log.w(TAG, "Error al intentar Ingresar", task.getException());
                     String msg = "Usuario y/o Clave son incorrectos [" + task.getException().getMessage() + "]";
-                    Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
                 }
                 showProgress(false);
                 }
@@ -302,10 +302,11 @@ public class ProveedorLoginFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(getActivity(),"Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Verification email sent to " + user.getEmail(), task.getException());
                 } else {
                     Log.e(TAG, "sendEmailVerification", task.getException());
-                    Toast.makeText(getActivity(), "Ha fallado la verificación del correo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Ha fallado la verificación del correo", Toast.LENGTH_SHORT).show();
                 }
                 }
             });
