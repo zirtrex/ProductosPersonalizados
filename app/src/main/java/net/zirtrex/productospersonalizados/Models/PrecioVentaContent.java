@@ -12,7 +12,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class PrecioVentaContent {
@@ -20,7 +23,7 @@ public class PrecioVentaContent {
     public static final String TAG = "PrecioVentaContent";
 
     List<MateriaPrimaAutocomplete> lMateriaPrima = new ArrayList<>();
-    List<MaterialIndirectoAutocomplete> lMaterialIndirecto = new ArrayList<>();
+    Map<String, Double> lMaterialIndirecto = new HashMap<>();
 
     Producto producto;
 
@@ -47,7 +50,9 @@ public class PrecioVentaContent {
             BigDecimal consumoUnitario = calcularConsumoUnitario(requerimientoTela, pedidos);
             BigDecimal costoUnitario = calcularCostoUnitario(consumoUnitario, precioTela);
 
-            return costoUnitario;
+            lMaterialIndirecto = producto.getMaterialesIndirectos();
+
+            return costoUnitario.add(calcularMaterialesIndirectos(lMaterialIndirecto));
         }
         return null;
     }
@@ -73,10 +78,6 @@ public class PrecioVentaContent {
         BigDecimal op1 = anchoTela.subtract(encajarAncho.multiply(BigDecimal.valueOf(2)));
         BigDecimal op2 = anchoTela.subtract(encajarAncho);
         BigDecimal op3 = anchoTela.subtract(encajarAncho.divide(BigDecimal.valueOf(2), 3, RoundingMode.HALF_UP));
-
-        //Log.w(TAG , String.valueOf(op1));
-        //Log.w(TAG , String.valueOf(op2));
-        //Log.w(TAG , String.valueOf(op3));
 
         BigDecimal cero = BigDecimal.valueOf(0);
 
@@ -216,7 +217,7 @@ public class PrecioVentaContent {
         return consumoUnitario.multiply(precioTela);
     }
     
-    private BigDecimal calcularCostoInsumos(ArrayList<Double> insumos){
+    private BigDecimal calcularCostoInsumos(List<Double> insumos){
         BigDecimal total = BigDecimal.valueOf(0.0);
         for(Double insumo : insumos){
             total = total.add(BigDecimal.valueOf(insumo));
@@ -225,16 +226,17 @@ public class PrecioVentaContent {
         return total;
     }
 
-    private BigDecimal calcularMaterialesIndirectos(ArrayList<Double> materialesIndirectos){
+    private BigDecimal calcularMaterialesIndirectos(Map<String, Double> mi){
         BigDecimal total = BigDecimal.valueOf(0.0);
-        for(Double mi : materialesIndirectos){
-            total = total.add(BigDecimal.valueOf(mi));
+        Collection<?> keys = mi.keySet();
+        for(Object key : keys){
+            total = total.add(BigDecimal.valueOf(mi.get(key)));
         }
 
         return total;
     }
 
-    private BigDecimal calcularGastosIndirectos(ArrayList<Double> gastosIndirectos){
+    private BigDecimal calcularGastosIndirectos(List<Double> gastosIndirectos){
         BigDecimal total = BigDecimal.valueOf(0.0);
         for(Double gi : gastosIndirectos){
             total = total.add(BigDecimal.valueOf(gi));
@@ -269,30 +271,5 @@ public class PrecioVentaContent {
         });
     }
 
-    private void populateLMaterialesIndirectos() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef  = database.getReference();
 
-        final Query materialesIndirectos;
-
-        materialesIndirectos = myRef.child("materialesIndirectos");
-
-        materialesIndirectos.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                lMaterialIndirecto.removeAll(lMaterialIndirecto);
-
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    MaterialIndirectoAutocomplete mP = new MaterialIndirectoAutocomplete();
-                    mP.setNombreMaterialIndirecto(postSnapshot.getKey());
-                    mP.setDescripcionMaterialIndirecto(postSnapshot.getValue(String.class));
-                    lMaterialIndirecto.add(mP);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
-    }
 }

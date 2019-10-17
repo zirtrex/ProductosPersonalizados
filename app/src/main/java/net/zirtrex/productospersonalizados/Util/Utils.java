@@ -6,10 +6,6 @@ import android.graphics.drawable.LayerDrawable;
 
 import net.zirtrex.productospersonalizados.Activities.R;
 
-/**
- * Created by Rafael on 15/05/2018.
- */
-
 public class Utils {
 
     public static int rotacion = 0;
